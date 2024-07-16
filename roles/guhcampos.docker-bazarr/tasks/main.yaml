@@ -1,11 +1,4 @@
 ---
-
-- name: debug
-  debug:
-    var: hostvars[inventory_hostname]
-  tags: debug
-
-
 - name: "create service group"
   ansible.builtin.group:
     name: "{{bazarr_unix_group_name}}"
@@ -48,7 +41,7 @@
     path: "{{bazarr_config_home}}"
     owner: "{{bazarr_unix_user_name}}"
     group: "{{bazarr_unix_group_name}}"
-    mode: 0775
+    mode: "{{bazarr_unix_mode_config_dir}}"
   notify: "restart docker-bazarr"
 
 - name: template systemd service

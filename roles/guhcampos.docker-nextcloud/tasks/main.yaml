@@ -1,11 +1,4 @@
 ---
-
-- name: debug
-  debug:
-    var: hostvars[inventory_hostname]
-  tags: debug
-
-
 - name: "create service group"
   ansible.builtin.group:
     name: "{{nextcloud_unix_group_name}}"
@@ -48,7 +41,7 @@
     path: "{{nextcloud_config_home}}"
     owner: "{{nextcloud_unix_user_name}}"
     group: "{{nextcloud_unix_group_name}}"
-    mode: 0775
+    mode: "{{nextcloud_unix_mode_config_dir}}"
   notify: "restart docker-nextcloud"
 
 - name: template systemd service

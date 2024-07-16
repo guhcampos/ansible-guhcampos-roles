@@ -3,13 +3,14 @@ services:
   archivebox:
     container_name: "archivebox"
     image: "{{archivebox_docker_image}}"
-    command: "server --quick-init 0.0.0.0:{{archivebox_http_port}}"
     restart: unless-stopped
 
+    devices: []
     environment:
       - PUID={{archivebox_unix_user_id}}
       - PGID={{archivebox_unix_group_id}}
       - UMASK={{archivebox_unix_umask}}
+      - TZ={{archivebox_timezone}}
       {% for key,value in archivebox_docker_env.items() -%}
       - {{key}}={{value}}
       {% endfor +%}
@@ -26,14 +27,15 @@ services:
       {% for volume in archivebox_docker_volumes -%}
       {% if volume != "" -%}
       - "{{volume}}"
-      {% endif -%}
+      {% endif %}
       {%- endfor %}
-{% for volume in archivebox_docker_volumes_extra -%}
+      {% for volume in archivebox_docker_volumes_extra -%}
       {% if volume != "" -%}
       - "{{volume.src}}:{{volume.dst}}"
       {% endif -%}
       {%- endfor +%}
 
+    cap_add: []
 networks:
   default:
     name: "{{archivebox_docker_network_name}}"

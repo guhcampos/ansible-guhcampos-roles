@@ -5,10 +5,12 @@ services:
     image: "{{qbittorrent_docker_image}}"
     restart: unless-stopped
 
+    devices: []
     environment:
       - PUID={{qbittorrent_unix_user_id}}
       - PGID={{qbittorrent_unix_group_id}}
       - UMASK={{qbittorrent_unix_umask}}
+      - TZ={{qbittorrent_timezone}}
       {% for key,value in qbittorrent_docker_env.items() -%}
       - {{key}}={{value}}
       {% endfor +%}
@@ -25,14 +27,15 @@ services:
       {% for volume in qbittorrent_docker_volumes -%}
       {% if volume != "" -%}
       - "{{volume}}"
-      {% endif -%}
+      {% endif %}
       {%- endfor %}
-{% for volume in qbittorrent_docker_volumes_extra -%}
+      {% for volume in qbittorrent_docker_volumes_extra -%}
       {% if volume != "" -%}
       - "{{volume.src}}:{{volume.dst}}"
       {% endif -%}
       {%- endfor +%}
 
+    cap_add: []
 networks:
   default:
     name: "{{qbittorrent_docker_network_name}}"

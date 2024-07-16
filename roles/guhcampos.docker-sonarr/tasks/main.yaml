@@ -1,11 +1,4 @@
 ---
-
-- name: debug
-  debug:
-    var: hostvars[inventory_hostname]
-  tags: debug
-
-
 - name: "create service group"
   ansible.builtin.group:
     name: "{{sonarr_unix_group_name}}"
@@ -48,7 +41,7 @@
     path: "{{sonarr_config_home}}"
     owner: "{{sonarr_unix_user_name}}"
     group: "{{sonarr_unix_group_name}}"
-    mode: 0775
+    mode: "{{sonarr_unix_mode_config_dir}}"
   notify: "restart docker-sonarr"
 
 - name: template systemd service

@@ -5,10 +5,12 @@ services:
     image: "{{jellyfin_docker_image}}"
     restart: unless-stopped
 
+    devices: []
     environment:
       - PUID={{jellyfin_unix_user_id}}
       - PGID={{jellyfin_unix_group_id}}
       - UMASK={{jellyfin_unix_umask}}
+      - TZ={{jellyfin_timezone}}
       {% for key,value in jellyfin_docker_env.items() -%}
       - {{key}}={{value}}
       {% endfor +%}
@@ -25,14 +27,15 @@ services:
       {% for volume in jellyfin_docker_volumes -%}
       {% if volume != "" -%}
       - "{{volume}}"
-      {% endif -%}
+      {% endif %}
       {%- endfor %}
-{% for volume in jellyfin_docker_volumes_extra -%}
+      {% for volume in jellyfin_docker_volumes_extra -%}
       {% if volume != "" -%}
       - "{{volume.src}}:{{volume.dst}}"
       {% endif -%}
       {%- endfor +%}
 
+    cap_add: []
 networks:
   default:
     name: "{{jellyfin_docker_network_name}}"

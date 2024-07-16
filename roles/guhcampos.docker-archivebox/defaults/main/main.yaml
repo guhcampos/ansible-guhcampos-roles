@@ -12,11 +12,16 @@ archivebox_home: "/opt/docker-archivebox"
 archivebox_nginx_http_port: 4444
 archivebox_nginx_https_port: 0
 archivebox_nginx_server_name: "archivebox.*"
+
+archivebox_timezone: "Etc/UTC"
 archivebox_unix_group_id: "{{archivebox_unix_user_id}}"
 archivebox_unix_group_name: "{{archivebox_unix_user_name}}"
 archivebox_unix_user_id: 4444
 archivebox_unix_user_name: "archivebox"
 archivebox_unix_umask: "002"
+archivebox_unix_mode_config_dir: "0750"
+
+archivebox_docker_devices: []
 
 # extra docker variables to set
 archivebox_docker_env:
@@ -43,7 +48,3 @@ archivebox_docker_volumes:
   - "{{archivebox_data_home}}:/data"
 
 archivebox_docker_volumes_extra: {}
-
-
-# nginx related
-nginx_proxy_config_home: "/opt/docker-nginx"

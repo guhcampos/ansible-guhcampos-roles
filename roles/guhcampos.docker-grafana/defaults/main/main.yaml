@@ -11,11 +11,16 @@ grafana_home: "/opt/docker-grafana"
 grafana_nginx_http_port: 3000
 grafana_nginx_https_port: 0
 grafana_nginx_server_name: "grafana.*"
+
+grafana_timezone: "Etc/UTC"
 grafana_unix_group_id: "{{grafana_unix_user_id}}"
 grafana_unix_group_name: "{{grafana_unix_user_name}}"
 grafana_unix_user_id: 3000
 grafana_unix_user_name: "grafana"
 grafana_unix_umask: "002"
+grafana_unix_mode_config_dir: "0750"
+
+grafana_docker_devices: []
 
 # extra docker variables to set
 grafana_docker_env: {}
@@ -30,7 +35,3 @@ grafana_docker_volumes:
   - "{{grafana_data_home}}:/data"
 
 grafana_docker_volumes_extra: {}
-
-
-# nginx related
-nginx_proxy_config_home: "/opt/docker-nginx"

@@ -11,11 +11,16 @@ qbittorrent_home: "/opt/docker-qbittorrent"
 qbittorrent_nginx_http_port: 6880
 qbittorrent_nginx_https_port: 0
 qbittorrent_nginx_server_name: "qbittorrent.*"
+
+qbittorrent_timezone: "Etc/UTC"
 qbittorrent_unix_group_id: "{{qbittorrent_unix_user_id}}"
 qbittorrent_unix_group_name: "{{qbittorrent_unix_user_name}}"
 qbittorrent_unix_user_id: 6880
 qbittorrent_unix_user_name: "qbittorrent"
 qbittorrent_unix_umask: "002"
+qbittorrent_unix_mode_config_dir: "0750"
+
+qbittorrent_docker_devices: []
 
 # extra docker variables to set
 qbittorrent_docker_env:
@@ -31,7 +36,3 @@ qbittorrent_docker_volumes:
   - "{{qbittorrent_data_home}}:/data"
 
 qbittorrent_docker_volumes_extra: {}
-
-
-# nginx related
-nginx_proxy_config_home: "/opt/docker-nginx"

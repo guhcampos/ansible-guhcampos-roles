@@ -5,10 +5,12 @@ services:
     image: "{{bazarr_docker_image}}"
     restart: unless-stopped
 
+    devices: []
     environment:
       - PUID={{bazarr_unix_user_id}}
       - PGID={{bazarr_unix_group_id}}
       - UMASK={{bazarr_unix_umask}}
+      - TZ={{bazarr_timezone}}
       {% for key,value in bazarr_docker_env.items() -%}
       - {{key}}={{value}}
       {% endfor +%}
@@ -25,14 +27,15 @@ services:
       {% for volume in bazarr_docker_volumes -%}
       {% if volume != "" -%}
       - "{{volume}}"
-      {% endif -%}
+      {% endif %}
       {%- endfor %}
-{% for volume in bazarr_docker_volumes_extra -%}
+      {% for volume in bazarr_docker_volumes_extra -%}
       {% if volume != "" -%}
       - "{{volume.src}}:{{volume.dst}}"
       {% endif -%}
       {%- endfor +%}
 
+    cap_add: []
 networks:
   default:
     name: "{{bazarr_docker_network_name}}"

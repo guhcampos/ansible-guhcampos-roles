@@ -11,11 +11,16 @@ transmission_home: "/opt/docker-transmission"
 transmission_nginx_http_port: 9091
 transmission_nginx_https_port: 0
 transmission_nginx_server_name: "transmission.*"
+
+transmission_timezone: "Etc/UTC"
 transmission_unix_group_id: "{{transmission_unix_user_id}}"
 transmission_unix_group_name: "{{transmission_unix_user_name}}"
 transmission_unix_user_id: 9091
 transmission_unix_user_name: "transmission"
 transmission_unix_umask: "002"
+transmission_unix_mode_config_dir: "0750"
+
+transmission_docker_devices: []
 
 # extra docker variables to set
 transmission_docker_env: {}
@@ -30,7 +35,3 @@ transmission_docker_volumes:
   - "{{transmission_data_home}}:/data"
 
 transmission_docker_volumes_extra: {}
-
-
-# nginx related
-nginx_proxy_config_home: "/opt/docker-nginx"

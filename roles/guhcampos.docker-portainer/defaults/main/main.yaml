@@ -18,6 +18,9 @@ portainer_unix_group_name: "{{portainer_unix_user_name}}"
 portainer_unix_user_id: 9443
 portainer_unix_user_name: "portainer"
 portainer_unix_umask: "002"
+portainer_unix_mode_config_dir: "0750"
+
+portainer_docker_devices: []
 
 # extra docker variables to set
 portainer_docker_env: {}

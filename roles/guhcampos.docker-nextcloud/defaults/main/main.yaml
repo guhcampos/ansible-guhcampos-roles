@@ -11,11 +11,16 @@ nextcloud_home: "/opt/docker-nextcloud"
 nextcloud_nginx_http_port: 8184
 nextcloud_nginx_https_port: 0
 nextcloud_nginx_server_name: "nextcloud.*"
+
+nextcloud_timezone: "Etc/UTC"
 nextcloud_unix_group_id: "{{nextcloud_unix_user_id}}"
 nextcloud_unix_group_name: "{{nextcloud_unix_user_name}}"
 nextcloud_unix_user_id: 8184
 nextcloud_unix_user_name: "nextcloud"
 nextcloud_unix_umask: "002"
+nextcloud_unix_mode_config_dir: "0750"
+
+nextcloud_docker_devices: []
 
 # extra docker variables to set
 nextcloud_docker_env: {}
@@ -30,7 +35,3 @@ nextcloud_docker_volumes:
   - "{{nextcloud_data_home}}:/data"
 
 nextcloud_docker_volumes_extra: {}
-
-
-# nginx related
-nginx_proxy_config_home: "/opt/docker-nginx"

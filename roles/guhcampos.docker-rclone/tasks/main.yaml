@@ -1,11 +1,4 @@
 ---
-
-- name: debug
-  debug:
-    var: hostvars[inventory_hostname]
-  tags: debug
-
-
 - name: "create service group"
   ansible.builtin.group:
     name: "{{rclone_unix_group_name}}"
@@ -48,7 +41,7 @@
     path: "{{rclone_config_home}}"
     owner: "{{rclone_unix_user_name}}"
     group: "{{rclone_unix_group_name}}"
-    mode: 0775
+    mode: "{{rclone_unix_mode_config_dir}}"
   notify: "restart docker-rclone"
 
 - name: template systemd service

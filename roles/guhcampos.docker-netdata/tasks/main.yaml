@@ -1,11 +1,4 @@
 ---
-
-- name: debug
-  debug:
-    var: hostvars[inventory_hostname]
-  tags: debug
-
-
 - name: "create service group"
   ansible.builtin.group:
     name: "{{netdata_unix_group_name}}"
@@ -48,7 +41,7 @@
     path: "{{netdata_config_home}}"
     owner: "{{netdata_unix_user_name}}"
     group: "{{netdata_unix_group_name}}"
-    mode: 0775
+    mode: "{{netdata_unix_mode_config_dir}}"
   notify: "restart docker-netdata"
 
 - name: template systemd service

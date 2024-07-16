@@ -11,11 +11,16 @@ heimdall_home: "/opt/docker-heimdall"
 heimdall_nginx_http_port: 8081
 heimdall_nginx_https_port: 0
 heimdall_nginx_server_name: "heimdall.*"
+
+heimdall_timezone: "Etc/UTC"
 heimdall_unix_group_id: "{{heimdall_unix_user_id}}"
 heimdall_unix_group_name: "{{heimdall_unix_user_name}}"
 heimdall_unix_user_id: 8081
 heimdall_unix_user_name: "heimdall"
 heimdall_unix_umask: "002"
+heimdall_unix_mode_config_dir: "0750"
+
+heimdall_docker_devices: []
 
 # extra docker variables to set
 heimdall_docker_env: {}
@@ -30,7 +35,3 @@ heimdall_docker_volumes:
   - "{{heimdall_data_home}}:/data"
 
 heimdall_docker_volumes_extra: {}
-
-
-# nginx related
-nginx_proxy_config_home: "/opt/docker-nginx"

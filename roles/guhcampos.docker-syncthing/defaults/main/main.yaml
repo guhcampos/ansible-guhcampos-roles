@@ -11,11 +11,16 @@ syncthing_home: "/opt/docker-syncthing"
 syncthing_nginx_http_port: 8384
 syncthing_nginx_https_port: 0
 syncthing_nginx_server_name: "syncthing.*"
+
+syncthing_timezone: "Etc/UTC"
 syncthing_unix_group_id: "{{syncthing_unix_user_id}}"
 syncthing_unix_group_name: "{{syncthing_unix_user_name}}"
 syncthing_unix_user_id: 8384
 syncthing_unix_user_name: "syncthing"
 syncthing_unix_umask: "002"
+syncthing_unix_mode_config_dir: "700"
+
+syncthing_docker_devices: []
 
 # extra docker variables to set
 syncthing_docker_env: {}
@@ -33,7 +38,3 @@ syncthing_docker_volumes:
   - "{{syncthing_data_home}}:/data"
 
 syncthing_docker_volumes_extra: {}
-
-
-# nginx related
-nginx_proxy_config_home: "/opt/docker-nginx"

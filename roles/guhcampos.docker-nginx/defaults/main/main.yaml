@@ -9,6 +9,8 @@ nginx_docker_image_tag: "latest"
 nginx_home: "/opt/docker-nginx"
 nginx_nginx_http_port: 80
 nginx_nginx_https_port: 443
+
+nginx_timezone: "Etc/UTC"
 nginx_unix_group_id: "{{nginx_unix_user_id}}"
 nginx_unix_group_name: "{{nginx_unix_user_name}}"
 nginx_unix_user_id: 8080

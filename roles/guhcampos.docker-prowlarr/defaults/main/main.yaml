@@ -10,11 +10,16 @@ prowlarr_home: "/opt/docker-prowlarr"
 prowlarr_nginx_http_port: 9696
 prowlarr_nginx_https_port: 0
 prowlarr_nginx_server_name: "prowlarr.*"
+
+prowlarr_timezone: "Etc/UTC"
 prowlarr_unix_group_id: "{{prowlarr_unix_user_id}}"
 prowlarr_unix_group_name: "{{prowlarr_unix_user_name}}"
 prowlarr_unix_user_id: 9696
 prowlarr_unix_user_name: "prowlarr"
 prowlarr_unix_umask: "002"
+prowlarr_unix_mode_config_dir: "0750"
+
+prowlarr_docker_devices: []
 
 # extra docker variables to set
 prowlarr_docker_env: {}
@@ -28,7 +33,3 @@ prowlarr_docker_volumes:
   - "{{prowlarr_config_home}}:/config"
 
 prowlarr_docker_volumes_extra: {}
-
-
-# nginx related
-nginx_proxy_config_home: "/opt/docker-nginx"

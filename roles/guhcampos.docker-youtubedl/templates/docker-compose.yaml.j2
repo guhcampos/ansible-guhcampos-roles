@@ -5,10 +5,12 @@ services:
     image: "{{youtubedl_docker_image}}"
     restart: unless-stopped
 
+    devices: []
     environment:
       - PUID={{youtubedl_unix_user_id}}
       - PGID={{youtubedl_unix_group_id}}
       - UMASK={{youtubedl_unix_umask}}
+      - TZ={{youtubedl_timezone}}
       {% for key,value in youtubedl_docker_env.items() -%}
       - {{key}}={{value}}
       {% endfor +%}
@@ -25,14 +27,15 @@ services:
       {% for volume in youtubedl_docker_volumes -%}
       {% if volume != "" -%}
       - "{{volume}}"
-      {% endif -%}
+      {% endif %}
       {%- endfor %}
-{% for volume in youtubedl_docker_volumes_extra -%}
+      {% for volume in youtubedl_docker_volumes_extra -%}
       {% if volume != "" -%}
       - "{{volume.src}}:{{volume.dst}}"
       {% endif -%}
       {%- endfor +%}
 
+    cap_add: []
 networks:
   default:
     name: "{{youtubedl_docker_network_name}}"

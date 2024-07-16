@@ -9,11 +9,16 @@ redis_docker_image_tag: "latest"
 redis_home: "/opt/docker-redis"
 redis_nginx_http_port: 0
 redis_nginx_https_port: 0
+
+redis_timezone: "Etc/UTC"
 redis_unix_group_id: "{{redis_unix_user_id}}"
 redis_unix_group_name: "{{redis_unix_user_name}}"
 redis_unix_user_id: 6379
 redis_unix_user_name: "redis"
 redis_unix_umask: "002"
+redis_unix_mode_config_dir: "0750"
+
+redis_docker_devices: []
 
 # extra docker variables to set
 redis_docker_env: {}
@@ -24,5 +29,5 @@ redis_docker_ports:
 
 # extra docker volumes to mount
 redis_docker_volumes:
-
+ {}
 redis_docker_volumes_extra: {}

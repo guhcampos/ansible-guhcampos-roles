@@ -5,10 +5,12 @@ services:
     image: "{{mariadb_docker_image}}"
     restart: unless-stopped
 
+    devices: []
     environment:
       - PUID={{mariadb_unix_user_id}}
       - PGID={{mariadb_unix_group_id}}
       - UMASK={{mariadb_unix_umask}}
+      - TZ={{mariadb_timezone}}
       {% for key,value in mariadb_docker_env.items() -%}
       - {{key}}={{value}}
       {% endfor +%}
@@ -25,14 +27,15 @@ services:
       {% for volume in mariadb_docker_volumes -%}
       {% if volume != "" -%}
       - "{{volume}}"
-      {% endif -%}
+      {% endif %}
       {%- endfor %}
-{% for volume in mariadb_docker_volumes_extra -%}
+      {% for volume in mariadb_docker_volumes_extra -%}
       {% if volume != "" -%}
       - "{{volume.src}}:{{volume.dst}}"
       {% endif -%}
       {%- endfor +%}
 
+    cap_add: []
 networks:
   default:
     name: "{{mariadb_docker_network_name}}"

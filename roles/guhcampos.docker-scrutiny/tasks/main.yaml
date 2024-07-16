@@ -1,11 +1,4 @@
 ---
-
-- name: debug
-  debug:
-    var: hostvars[inventory_hostname]
-  tags: debug
-
-
 - name: "create service group"
   ansible.builtin.group:
     name: "{{scrutiny_unix_group_name}}"
@@ -48,7 +41,7 @@
     path: "{{scrutiny_config_home}}"
     owner: "{{scrutiny_unix_user_name}}"
     group: "{{scrutiny_unix_group_name}}"
-    mode: 0775
+    mode: "{{scrutiny_unix_mode_config_dir}}"
   notify: "restart docker-scrutiny"
 
 - name: template systemd service

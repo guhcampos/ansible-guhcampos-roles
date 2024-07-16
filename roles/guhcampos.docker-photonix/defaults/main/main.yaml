@@ -18,6 +18,9 @@ photonix_unix_group_name: "{{photonix_unix_user_name}}"
 photonix_unix_user_id: 5535
 photonix_unix_user_name: "photonix"
 photonix_unix_umask: "002"
+photonix_unix_mode_config_dir: "0750"
+
+photonix_docker_devices: []
 
 # extra docker variables to set
 photonix_docker_env: {}

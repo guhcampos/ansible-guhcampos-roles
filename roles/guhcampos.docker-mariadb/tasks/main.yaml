@@ -1,11 +1,4 @@
 ---
-
-- name: debug
-  debug:
-    var: hostvars[inventory_hostname]
-  tags: debug
-
-
 - name: "create service group"
   ansible.builtin.group:
     name: "{{mariadb_unix_group_name}}"
@@ -48,7 +41,7 @@
     path: "{{mariadb_config_home}}"
     owner: "{{mariadb_unix_user_name}}"
     group: "{{mariadb_unix_group_name}}"
-    mode: 0775
+    mode: "{{mariadb_unix_mode_config_dir}}"
   notify: "restart docker-mariadb"
 
 - name: template systemd service

@@ -6,16 +6,21 @@ scrutiny_docker_image: "{{scrutiny_docker_repo}}:{{scrutiny_docker_image_tag}}"
 scrutiny_docker_mem_limit: "1g"
 scrutiny_docker_network_name: "scrutiny"
 scrutiny_docker_repo: "ghcr.io/analogj/scrutiny"
-scrutiny_docker_image_tag: "latest"
+scrutiny_docker_image_tag: "master-omnibus"
 scrutiny_home: "/opt/docker-scrutiny"
 scrutiny_nginx_http_port: 2999
 scrutiny_nginx_https_port: 0
 scrutiny_nginx_server_name: "scrutiny.*"
+
+scrutiny_timezone: "Etc/UTC"
 scrutiny_unix_group_id: "{{scrutiny_unix_user_id}}"
 scrutiny_unix_group_name: "{{scrutiny_unix_user_name}}"
 scrutiny_unix_user_id: 2999
 scrutiny_unix_user_name: "scrutiny"
 scrutiny_unix_umask: "002"
+scrutiny_unix_mode_config_dir: "0750"
+
+scrutiny_docker_devices: []
 
 # extra docker variables to set
 scrutiny_docker_env:
@@ -33,7 +38,3 @@ scrutiny_docker_volumes:
   - "{{scrutiny_data_home}}:/data"
 
 scrutiny_docker_volumes_extra: {}
-
-
-# nginx related
-nginx_proxy_config_home: "/opt/docker-nginx"

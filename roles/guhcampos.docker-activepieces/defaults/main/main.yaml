@@ -10,11 +10,16 @@ activepieces_home: "/opt/docker-activepieces"
 activepieces_nginx_http_port: 3838
 activepieces_nginx_https_port: 0
 activepieces_nginx_server_name: "activepieces.*"
+
+activepieces_timezone: "Etc/UTC"
 activepieces_unix_group_id: "{{activepieces_unix_user_id}}"
 activepieces_unix_group_name: "{{activepieces_unix_user_name}}"
 activepieces_unix_user_id: 3838
 activepieces_unix_user_name: "activepieces"
-activepieces_unix_umask: "0"
+activepieces_unix_umask: "027"
+activepieces_unix_mode_config_dir: "0750"
+
+activepieces_docker_devices: []
 
 # extra docker variables to set
 activepieces_docker_env: {}
@@ -25,9 +30,5 @@ activepieces_docker_ports:
 
 # extra docker volumes to mount
 activepieces_docker_volumes:
-
+ {}
 activepieces_docker_volumes_extra: {}
-
-
-# nginx related
-nginx_proxy_config_home: "/opt/docker-nginx"

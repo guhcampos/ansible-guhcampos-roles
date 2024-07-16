@@ -1,11 +1,4 @@
 ---
-
-- name: debug
-  debug:
-    var: hostvars[inventory_hostname]
-  tags: debug
-
-
 - name: "create service group"
   ansible.builtin.group:
     name: "{{portainer_unix_group_name}}"
@@ -48,7 +41,7 @@
     path: "{{portainer_config_home}}"
     owner: "{{portainer_unix_user_name}}"
     group: "{{portainer_unix_group_name}}"
-    mode: 0775
+    mode: "{{portainer_unix_mode_config_dir}}"
   notify: "restart docker-portainer"
 
 - name: template systemd service

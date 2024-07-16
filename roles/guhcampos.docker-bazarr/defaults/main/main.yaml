@@ -11,11 +11,16 @@ bazarr_home: "/opt/docker-bazarr"
 bazarr_nginx_http_port: 6767
 bazarr_nginx_https_port: 0
 bazarr_nginx_server_name: "bazarr.*"
+
+bazarr_timezone: "Etc/UTC"
 bazarr_unix_group_id: "{{bazarr_unix_user_id}}"
 bazarr_unix_group_name: "{{bazarr_unix_user_name}}"
 bazarr_unix_user_id: 6767
 bazarr_unix_user_name: "bazarr"
 bazarr_unix_umask: "027"
+bazarr_unix_mode_config_dir: "0750"
+
+bazarr_docker_devices: []
 
 # extra docker variables to set
 bazarr_docker_env: {}
@@ -30,7 +35,3 @@ bazarr_docker_volumes:
   - "{{bazarr_data_home}}:/data"
 
 bazarr_docker_volumes_extra: {}
-
-
-# nginx related
-nginx_proxy_config_home: "/opt/docker-nginx"

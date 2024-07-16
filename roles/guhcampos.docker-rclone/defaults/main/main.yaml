@@ -12,11 +12,16 @@ rclone_home: "/opt/docker-rclone"
 rclone_nginx_http_port: 3333
 rclone_nginx_https_port: 0
 rclone_nginx_server_name: "rclone.*"
+
+rclone_timezone: "Etc/UTC"
 rclone_unix_group_id: "{{rclone_unix_user_id}}"
 rclone_unix_group_name: "{{rclone_unix_user_name}}"
 rclone_unix_user_id: 3333
 rclone_unix_user_name: "rclone"
 rclone_unix_umask: "002"
+rclone_unix_mode_config_dir: "0750"
+
+rclone_docker_devices: []
 
 # extra docker variables to set
 rclone_docker_env: {}
@@ -31,7 +36,3 @@ rclone_docker_volumes:
   - "{{rclone_data_home}}:/data"
 
 rclone_docker_volumes_extra: {}
-
-
-# nginx related
-nginx_proxy_config_home: "/opt/docker-nginx"

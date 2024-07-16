@@ -5,10 +5,12 @@ services:
     image: "{{redis_docker_image}}"
     restart: unless-stopped
 
+    devices: []
     environment:
       - PUID={{redis_unix_user_id}}
       - PGID={{redis_unix_group_id}}
       - UMASK={{redis_unix_umask}}
+      - TZ={{redis_timezone}}
       {% for key,value in redis_docker_env.items() -%}
       - {{key}}={{value}}
       {% endfor +%}
@@ -25,14 +27,15 @@ services:
       {% for volume in redis_docker_volumes -%}
       {% if volume != "" -%}
       - "{{volume}}"
-      {% endif -%}
+      {% endif %}
       {%- endfor %}
-{% for volume in redis_docker_volumes_extra -%}
+      {% for volume in redis_docker_volumes_extra -%}
       {% if volume != "" -%}
       - "{{volume.src}}:{{volume.dst}}"
       {% endif -%}
       {%- endfor +%}
 
+    cap_add: []
 networks:
   default:
     name: "{{redis_docker_network_name}}"

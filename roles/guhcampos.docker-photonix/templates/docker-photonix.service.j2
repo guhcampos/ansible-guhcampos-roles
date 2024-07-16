@@ -9,5 +9,5 @@ WantedBy=multi-user.target
 [Service]
 RemainAfterExit=true
 WorkingDirectory={{photonix_home}}
-ExecStart=/usr/bin/docker-compose up -d --remove-orphans
-ExecStop=/usr/bin/docker-compose down
+ExecStart=/usr/bin/docker compose up -d --remove-orphans
+ExecStop=/usr/bin/docker compose down

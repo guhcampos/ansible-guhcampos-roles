@@ -5,10 +5,12 @@ services:
     image: "{{syncthing_docker_image}}"
     restart: unless-stopped
 
+    devices: []
     environment:
       - PUID={{syncthing_unix_user_id}}
       - PGID={{syncthing_unix_group_id}}
       - UMASK={{syncthing_unix_umask}}
+      - TZ={{syncthing_timezone}}
       {% for key,value in syncthing_docker_env.items() -%}
       - {{key}}={{value}}
       {% endfor +%}
@@ -25,14 +27,15 @@ services:
       {% for volume in syncthing_docker_volumes -%}
       {% if volume != "" -%}
       - "{{volume}}"
-      {% endif -%}
+      {% endif %}
       {%- endfor %}
-{% for volume in syncthing_docker_volumes_extra -%}
+      {% for volume in syncthing_docker_volumes_extra -%}
       {% if volume != "" -%}
       - "{{volume.src}}:{{volume.dst}}"
       {% endif -%}
       {%- endfor +%}
 
+    cap_add: []
 networks:
   default:
     name: "{{syncthing_docker_network_name}}"

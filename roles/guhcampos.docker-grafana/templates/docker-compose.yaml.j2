@@ -5,10 +5,12 @@ services:
     image: "{{grafana_docker_image}}"
     restart: unless-stopped
 
+    devices: []
     environment:
       - PUID={{grafana_unix_user_id}}
       - PGID={{grafana_unix_group_id}}
       - UMASK={{grafana_unix_umask}}
+      - TZ={{grafana_timezone}}
       {% for key,value in grafana_docker_env.items() -%}
       - {{key}}={{value}}
       {% endfor +%}
@@ -25,14 +27,15 @@ services:
       {% for volume in grafana_docker_volumes -%}
       {% if volume != "" -%}
       - "{{volume}}"
-      {% endif -%}
+      {% endif %}
       {%- endfor %}
-{% for volume in grafana_docker_volumes_extra -%}
+      {% for volume in grafana_docker_volumes_extra -%}
       {% if volume != "" -%}
       - "{{volume.src}}:{{volume.dst}}"
       {% endif -%}
       {%- endfor +%}
 
+    cap_add: []
 networks:
   default:
     name: "{{grafana_docker_network_name}}"

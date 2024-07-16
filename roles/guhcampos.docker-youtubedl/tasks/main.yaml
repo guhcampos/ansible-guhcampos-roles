@@ -1,9 +1,4 @@
 ---
-- name: debug
-  debug:
-    var: hostvars[inventory_hostname]
-  tags: debug
-
 - name: "create service group"
   ansible.builtin.group:
     name: "{{youtubedl_unix_group_name}}"
@@ -25,7 +20,7 @@
     name: "{{youtubedl_unix_user_name}}"
     state: present
     uid: "{{youtubedl_unix_user_id}}"
-    group: "{{youtubedl_unix_group_name}}"
+    group:  "{{youtubedl_unix_group_name}}"
     shell: /usr/sbin/nologin
     home: "{{youtubedl_home}}"
     create_home: false
@@ -46,7 +41,7 @@
     path: "{{youtubedl_config_home}}"
     owner: "{{youtubedl_unix_user_name}}"
     group: "{{youtubedl_unix_group_name}}"
-    mode: 0775
+    mode: "{{youtubedl_unix_mode_config_dir}}"
   notify: "restart docker-youtubedl"
 
 - name: template systemd service

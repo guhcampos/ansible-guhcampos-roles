@@ -5,10 +5,12 @@ services:
     image: "{{nginx_docker_image}}"
     restart: unless-stopped
 
+    devices: []
     environment:
       - PUID={{nginx_unix_user_id}}
       - PGID={{nginx_unix_group_id}}
       - UMASK={{nginx_unix_umask}}
+      - TZ={{nginx_timezone}}
       {% for key,value in nginx_docker_env.items() -%}
       - {{key}}={{value}}
       {% endfor +%}
@@ -25,13 +27,19 @@ services:
       {% for volume in nginx_docker_volumes -%}
       {% if volume != "" -%}
       - "{{volume}}"
-      {% endif -%}
+      {% endif %}
       {%- endfor %}
-{% for volume in nginx_docker_volumes_extra -%}
+      {% for volume in nginx_docker_volumes_extra -%}
       {% if volume != "" -%}
       - "{{volume.src}}:{{volume.dst}}"
       {% endif -%}
       {%- endfor +%}
+
+    cap_add:
+      - NET_ADMIN
+
+
+
 
 networks:
   default:

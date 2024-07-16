@@ -1,11 +1,4 @@
 ---
-
-- name: debug
-  debug:
-    var: hostvars[inventory_hostname]
-  tags: debug
-
-
 - name: "create service group"
   ansible.builtin.group:
     name: "{{prowlarr_unix_group_name}}"
@@ -48,7 +41,7 @@
     path: "{{prowlarr_config_home}}"
     owner: "{{prowlarr_unix_user_name}}"
     group: "{{prowlarr_unix_group_name}}"
-    mode: 0775
+    mode: "{{prowlarr_unix_mode_config_dir}}"
   notify: "restart docker-prowlarr"
 
 - name: template systemd service

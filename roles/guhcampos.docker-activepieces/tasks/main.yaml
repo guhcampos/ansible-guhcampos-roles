@@ -1,11 +1,4 @@
 ---
-
-- name: debug
-  debug:
-    var: hostvars[inventory_hostname]
-  tags: debug
-
-
 - name: "create service group"
   ansible.builtin.group:
     name: "{{activepieces_unix_group_name}}"
@@ -48,7 +41,7 @@
     path: "{{activepieces_config_home}}"
     owner: "{{activepieces_unix_user_name}}"
     group: "{{activepieces_unix_group_name}}"
-    mode: 0775
+    mode: "{{activepieces_unix_mode_config_dir}}"
   notify: "restart docker-activepieces"
 
 - name: template systemd service

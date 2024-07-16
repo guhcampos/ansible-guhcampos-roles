@@ -11,11 +11,16 @@ youtubedl_home: "/opt/docker-youtubedl"
 youtubedl_nginx_http_port: 8998
 youtubedl_nginx_https_port: 0
 youtubedl_nginx_server_name: "youtubedl.*"
+
+youtubedl_timezone: "Etc/UTC"
 youtubedl_unix_group_id: "{{youtubedl_unix_user_id}}"
 youtubedl_unix_group_name: "{{youtubedl_unix_user_name}}"
 youtubedl_unix_user_id: 8998
 youtubedl_unix_user_name: "youtubedl"
 youtubedl_unix_umask: "002"
+youtubedl_unix_mode_config_dir: "0750"
+
+youtubedl_docker_devices: []
 
 # extra docker variables to set
 youtubedl_docker_env: {}
@@ -30,7 +35,3 @@ youtubedl_docker_volumes:
   - "{{youtubedl_data_home}}:/data"
 
 youtubedl_docker_volumes_extra: {}
-
-
-# nginx related
-nginx_proxy_config_home: "/opt/docker-nginx"

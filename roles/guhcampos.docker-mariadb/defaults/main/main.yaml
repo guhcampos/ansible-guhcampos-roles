@@ -10,11 +10,16 @@ mariadb_docker_image_tag: "latest"
 mariadb_home: "/opt/docker-mariadb"
 mariadb_nginx_http_port: 0
 mariadb_nginx_https_port: 0
+
+mariadb_timezone: "Etc/UTC"
 mariadb_unix_group_id: "{{mariadb_unix_user_id}}"
 mariadb_unix_group_name: "{{mariadb_unix_user_name}}"
 mariadb_unix_user_id: 3306
 mariadb_unix_user_name: "mariadb"
 mariadb_unix_umask: "002"
+mariadb_unix_mode_config_dir: "0750"
+
+mariadb_docker_devices: []
 
 # extra docker variables to set
 mariadb_docker_env: {}

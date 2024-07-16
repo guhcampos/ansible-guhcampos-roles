@@ -4,18 +4,23 @@ netdata_data_home: "{{netdata_home}}/data"
 netdata_docker_cpu_limit: "1"
 netdata_docker_image: "{{netdata_docker_repo}}:{{netdata_docker_image_tag}}"
 netdata_docker_mem_limit: "1g"
-netdata_docker_network_name: "netdata"
+netdata_docker_network_name: "host"
 netdata_docker_repo: "netdata/netdata"
 netdata_docker_image_tag: "latest"
 netdata_home: "/opt/docker-netdata"
 netdata_nginx_http_port: 19999
 netdata_nginx_https_port: 0
 netdata_nginx_server_name: "netdata.*"
+
+netdata_timezone: "Etc/UTC"
 netdata_unix_group_id: "{{netdata_unix_user_id}}"
 netdata_unix_group_name: "{{netdata_unix_user_name}}"
 netdata_unix_user_id: 19999
 netdata_unix_user_name: "netdata"
 netdata_unix_umask: "002"
+netdata_unix_mode_config_dir: "0750"
+
+netdata_docker_devices: []
 
 # extra docker variables to set
 netdata_docker_env:
@@ -34,7 +39,3 @@ netdata_docker_volumes:
   - "/etc/group:/host/etc/group:ro"
 
 netdata_docker_volumes_extra: {}
-
-
-# nginx related
-nginx_proxy_config_home: "/opt/docker-nginx"

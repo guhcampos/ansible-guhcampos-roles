@@ -11,11 +11,16 @@ sonarr_home: "/opt/docker-sonarr"
 sonarr_nginx_http_port: 8989
 sonarr_nginx_https_port: 0
 sonarr_nginx_server_name: "sonarr.*"
+
+sonarr_timezone: "Etc/UTC"
 sonarr_unix_group_id: "{{sonarr_unix_user_id}}"
 sonarr_unix_group_name: "{{sonarr_unix_user_name}}"
 sonarr_unix_user_id: 8989
 sonarr_unix_user_name: "sonarr"
 sonarr_unix_umask: "002"
+sonarr_unix_mode_config_dir: "0750"
+
+sonarr_docker_devices: []
 
 # extra docker variables to set
 sonarr_docker_env: {}
@@ -30,7 +35,3 @@ sonarr_docker_volumes:
   - "{{sonarr_data_home}}:/data"
 
 sonarr_docker_volumes_extra: {}
-
-
-# nginx related
-nginx_proxy_config_home: "/opt/docker-nginx"

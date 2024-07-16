@@ -11,11 +11,16 @@ jellyfin_home: "/opt/docker-jellyfin"
 jellyfin_nginx_http_port: 8096
 jellyfin_nginx_https_port: 0
 jellyfin_nginx_server_name: "jellyfin.*"
+
+jellyfin_timezone: "Etc/UTC"
 jellyfin_unix_group_id: "{{jellyfin_unix_user_id}}"
 jellyfin_unix_group_name: "{{jellyfin_unix_user_name}}"
 jellyfin_unix_user_id: 8096
 jellyfin_unix_user_name: "jellyfin"
 jellyfin_unix_umask: "002"
+jellyfin_unix_mode_config_dir: "0750"
+
+jellyfin_docker_devices: []
 
 # extra docker variables to set
 jellyfin_docker_env: {}
@@ -30,7 +35,3 @@ jellyfin_docker_volumes:
   - "{{jellyfin_data_home}}:/data"
 
 jellyfin_docker_volumes_extra: {}
-
-
-# nginx related
-nginx_proxy_config_home: "/opt/docker-nginx"

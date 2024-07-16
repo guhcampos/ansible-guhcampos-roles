@@ -1,11 +1,4 @@
 ---
-
-- name: debug
-  debug:
-    var: hostvars[inventory_hostname]
-  tags: debug
-
-
 - name: "create service group"
   ansible.builtin.group:
     name: "{{photonix_unix_group_name}}"
@@ -48,7 +41,7 @@
     path: "{{photonix_config_home}}"
     owner: "{{photonix_unix_user_name}}"
     group: "{{photonix_unix_group_name}}"
-    mode: 0775
+    mode: "{{photonix_unix_mode_config_dir}}"
   notify: "restart docker-photonix"
 
 - name: template systemd service

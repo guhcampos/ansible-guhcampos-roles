@@ -1,11 +1,4 @@
 ---
-
-- name: debug
-  debug:
-    var: hostvars[inventory_hostname]
-  tags: debug
-
-
 - name: "create service group"
   ansible.builtin.group:
     name: "{{heimdall_unix_group_name}}"
@@ -48,7 +41,7 @@
     path: "{{heimdall_config_home}}"
     owner: "{{heimdall_unix_user_name}}"
     group: "{{heimdall_unix_group_name}}"
-    mode: 0775
+    mode: "{{heimdall_unix_mode_config_dir}}"
   notify: "restart docker-heimdall"
 
 - name: template systemd service
