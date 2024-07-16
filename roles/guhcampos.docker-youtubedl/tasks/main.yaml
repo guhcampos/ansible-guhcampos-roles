@@ -1,0 +1,69 @@
+---
+- name: debug
+  debug:
+    var: hostvars[inventory_hostname]
+  tags: debug
+
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{youtubedl_unix_group_name}}"
+    gid: "{{youtubedl_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{youtubedl_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart docker-youtubedl"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{youtubedl_unix_user_name}}"
+    state: present
+    uid: "{{youtubedl_unix_user_id}}"
+    group: "{{youtubedl_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{youtubedl_home}}"
+    create_home: false
+
+- name: template docker-compose
+  ansible.builtin.template:
+    src: "docker-compose.yaml.j2"
+    dest: "{{youtubedl_home}}/docker-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart docker-youtubedl"
+  tags: [docker-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{youtubedl_config_home}}"
+    owner: "{{youtubedl_unix_user_name}}"
+    group: "{{youtubedl_unix_group_name}}"
+    mode: 0775
+  notify: "restart docker-youtubedl"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "docker-youtubedl.service.j2"
+    dest: "/lib/systemd/system/docker-youtubedl.service"
+  notify: "restart docker-youtubedl"
+
+- name: enable and start docker-youtubedl
+  ansible.builtin.systemd_service:
+    name: docker-youtubedl
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5
+
+- ansible.builtin.include_tasks: "_nginx.yaml"
+  tags: [nginx]

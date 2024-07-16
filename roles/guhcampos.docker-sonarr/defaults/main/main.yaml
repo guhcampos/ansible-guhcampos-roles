@@ -1,0 +1,36 @@
+---
+sonarr_config_home: "{{sonarr_home}}/config"
+sonarr_data_home: "{{sonarr_home}}/data"
+sonarr_docker_cpu_limit: "1"
+sonarr_docker_image: "{{sonarr_docker_repo}}:{{sonarr_docker_image_tag}}"
+sonarr_docker_mem_limit: "1g"
+sonarr_docker_network_name: "sonarr"
+sonarr_docker_repo: "ghcr.io/hotio/sonarr"
+sonarr_docker_image_tag: "latest"
+sonarr_home: "/opt/docker-sonarr"
+sonarr_nginx_http_port: 8989
+sonarr_nginx_https_port: 0
+sonarr_nginx_server_name: "sonarr.*"
+sonarr_unix_group_id: "{{sonarr_unix_user_id}}"
+sonarr_unix_group_name: "{{sonarr_unix_user_name}}"
+sonarr_unix_user_id: 8989
+sonarr_unix_user_name: "sonarr"
+sonarr_unix_umask: "002"
+
+# extra docker variables to set
+sonarr_docker_env: {}
+
+# network ports to expose
+sonarr_docker_ports:
+  - "{{sonarr_nginx_http_port}}:{{sonarr_nginx_http_port}}"
+
+# extra docker volumes to mount
+sonarr_docker_volumes:
+  - "{{sonarr_config_home}}:/config"
+  - "{{sonarr_data_home}}:/data"
+
+sonarr_docker_volumes_extra: {}
+
+
+# nginx related
+nginx_proxy_config_home: "/opt/docker-nginx"

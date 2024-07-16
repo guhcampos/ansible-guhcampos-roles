@@ -1,0 +1,4 @@
+- community.general.homebrew_cask:
+    name: "{{item}}"
+    state: latest
+  loop: "{{fixed_fonts}}"

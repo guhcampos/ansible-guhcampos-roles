@@ -1,0 +1,39 @@
+---
+services:
+  bazarr:
+    container_name: "bazarr"
+    image: "{{bazarr_docker_image}}"
+    restart: unless-stopped
+
+    environment:
+      - PUID={{bazarr_unix_user_id}}
+      - PGID={{bazarr_unix_group_id}}
+      - UMASK={{bazarr_unix_umask}}
+      {% for key,value in bazarr_docker_env.items() -%}
+      - {{key}}={{value}}
+      {% endfor +%}
+
+    ports:
+      {% for port in bazarr_docker_ports -%}
+      {% if port != "" -%}
+      - {{port}}
+      {% endif -%}
+      {%- endfor +%}
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      {% for volume in bazarr_docker_volumes -%}
+      {% if volume != "" -%}
+      - "{{volume}}"
+      {% endif -%}
+      {%- endfor %}
+{% for volume in bazarr_docker_volumes_extra -%}
+      {% if volume != "" -%}
+      - "{{volume.src}}:{{volume.dst}}"
+      {% endif -%}
+      {%- endfor +%}
+
+networks:
+  default:
+    name: "{{bazarr_docker_network_name}}"
+    external: true

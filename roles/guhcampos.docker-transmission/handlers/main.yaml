@@ -1,0 +1,6 @@
+---
+- name: restart docker-transmission
+  ansible.builtin.systemd_service:
+    name: "docker-transmission"
+    daemon_reload: true
+    state: restarted

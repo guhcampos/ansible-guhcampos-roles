@@ -1,0 +1,39 @@
+---
+services:
+  nextcloud:
+    container_name: "nextcloud"
+    image: "{{nextcloud_docker_image}}"
+    restart: unless-stopped
+
+    environment:
+      - PUID={{nextcloud_unix_user_id}}
+      - PGID={{nextcloud_unix_group_id}}
+      - UMASK={{nextcloud_unix_umask}}
+      {% for key,value in nextcloud_docker_env.items() -%}
+      - {{key}}={{value}}
+      {% endfor +%}
+
+    ports:
+      {% for port in nextcloud_docker_ports -%}
+      {% if port != "" -%}
+      - {{port}}
+      {% endif -%}
+      {%- endfor +%}
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      {% for volume in nextcloud_docker_volumes -%}
+      {% if volume != "" -%}
+      - "{{volume}}"
+      {% endif -%}
+      {%- endfor %}
+{% for volume in nextcloud_docker_volumes_extra -%}
+      {% if volume != "" -%}
+      - "{{volume.src}}:{{volume.dst}}"
+      {% endif -%}
+      {%- endfor +%}
+
+networks:
+  default:
+    name: "{{nextcloud_docker_network_name}}"
+    external: true

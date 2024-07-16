@@ -1,0 +1,71 @@
+---
+
+- name: debug
+  debug:
+    var: hostvars[inventory_hostname]
+  tags: debug
+
+
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{syncthing_unix_group_name}}"
+    gid: "{{syncthing_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{syncthing_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart docker-syncthing"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{syncthing_unix_user_name}}"
+    state: present
+    uid: "{{syncthing_unix_user_id}}"
+    group:  "{{syncthing_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{syncthing_home}}"
+    create_home: false
+
+- name: template docker-compose
+  ansible.builtin.template:
+    src: "docker-compose.yaml.j2"
+    dest: "{{syncthing_home}}/docker-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart docker-syncthing"
+  tags: [docker-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{syncthing_config_home}}"
+    owner: "{{syncthing_unix_user_name}}"
+    group: "{{syncthing_unix_group_name}}"
+    mode: 0775
+  notify: "restart docker-syncthing"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "docker-syncthing.service.j2"
+    dest: "/lib/systemd/system/docker-syncthing.service"
+  notify: "restart docker-syncthing"
+
+- name: enable and start docker-syncthing
+  ansible.builtin.systemd_service:
+    name: docker-syncthing
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5
+
+- ansible.builtin.include_tasks: "_nginx.yaml"
+  tags: [nginx]

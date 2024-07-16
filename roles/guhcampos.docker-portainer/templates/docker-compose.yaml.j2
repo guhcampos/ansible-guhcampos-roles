@@ -1,0 +1,39 @@
+---
+services:
+  portainer:
+    container_name: "portainer"
+    image: "{{portainer_docker_image}}"
+    restart: unless-stopped
+
+    environment:
+      - PUID={{portainer_unix_user_id}}
+      - PGID={{portainer_unix_group_id}}
+      - UMASK={{portainer_unix_umask}}
+      {% for key,value in portainer_docker_env.items() -%}
+      - {{key}}={{value}}
+      {% endfor +%}
+
+    ports:
+      {% for port in portainer_docker_ports -%}
+      {% if port != "" -%}
+      - {{port}}
+      {% endif -%}
+      {%- endfor +%}
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      {% for volume in portainer_docker_volumes -%}
+      {% if volume != "" -%}
+      - "{{volume}}"
+      {% endif -%}
+      {%- endfor %}
+{% for volume in portainer_docker_volumes_extra -%}
+      {% if volume != "" -%}
+      - "{{volume.src}}:{{volume.dst}}"
+      {% endif -%}
+      {%- endfor +%}
+
+networks:
+  default:
+    name: "{{portainer_docker_network_name}}"
+    external: true

@@ -1,0 +1,37 @@
+---
+qbittorrent_config_home: "{{qbittorrent_home}}/config"
+qbittorrent_data_home: "{{qbittorrent_home}}/data"
+qbittorrent_docker_cpu_limit: "1"
+qbittorrent_docker_image: "{{qbittorrent_docker_repo}}:{{qbittorrent_docker_image_tag}}"
+qbittorrent_docker_mem_limit: "1g"
+qbittorrent_docker_network_name: "qbittorrent"
+qbittorrent_docker_repo: "ghcr.io/hotio/qbittorrent"
+qbittorrent_docker_image_tag: "latest"
+qbittorrent_home: "/opt/docker-qbittorrent"
+qbittorrent_nginx_http_port: 6880
+qbittorrent_nginx_https_port: 0
+qbittorrent_nginx_server_name: "qbittorrent.*"
+qbittorrent_unix_group_id: "{{qbittorrent_unix_user_id}}"
+qbittorrent_unix_group_name: "{{qbittorrent_unix_user_name}}"
+qbittorrent_unix_user_id: 6880
+qbittorrent_unix_user_name: "qbittorrent"
+qbittorrent_unix_umask: "002"
+
+# extra docker variables to set
+qbittorrent_docker_env:
+  WEBUI_PORTS: "6880/tcp"
+
+# network ports to expose
+qbittorrent_docker_ports:
+  - "{{qbittorrent_nginx_http_port}}:{{qbittorrent_nginx_http_port}}"
+
+# extra docker volumes to mount
+qbittorrent_docker_volumes:
+  - "{{qbittorrent_config_home}}:/config"
+  - "{{qbittorrent_data_home}}:/data"
+
+qbittorrent_docker_volumes_extra: {}
+
+
+# nginx related
+nginx_proxy_config_home: "/opt/docker-nginx"

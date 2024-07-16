@@ -1,0 +1,7 @@
+---
+- name: template nginx config
+  ansible.builtin.template:
+    src: "docker-heimdall.nginx.subfolder.conf.j2"
+    dest: "{{nginx_proxy_config_home}}/docker-heimdall.subfolder.conf"
+  notify: restart docker-nginx
+  tags: [nginx]

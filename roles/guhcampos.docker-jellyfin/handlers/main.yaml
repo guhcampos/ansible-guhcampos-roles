@@ -1,0 +1,6 @@
+---
+- name: restart docker-jellyfin
+  ansible.builtin.systemd_service:
+    name: "docker-jellyfin"
+    daemon_reload: true
+    state: restarted

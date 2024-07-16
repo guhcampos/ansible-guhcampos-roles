@@ -1,0 +1,68 @@
+---
+
+- name: debug
+  debug:
+    var: hostvars[inventory_hostname]
+  tags: debug
+
+
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{redis_unix_group_name}}"
+    gid: "{{redis_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{redis_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart docker-redis"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{redis_unix_user_name}}"
+    state: present
+    uid: "{{redis_unix_user_id}}"
+    group:  "{{redis_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{redis_home}}"
+    create_home: false
+
+- name: template docker-compose
+  ansible.builtin.template:
+    src: "docker-compose.yaml.j2"
+    dest: "{{redis_home}}/docker-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart docker-redis"
+  tags: [docker-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{redis_config_home}}"
+    owner: "{{redis_unix_user_name}}"
+    group: "{{redis_unix_group_name}}"
+    mode: 0775
+  notify: "restart docker-redis"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "docker-redis.service.j2"
+    dest: "/lib/systemd/system/docker-redis.service"
+  notify: "restart docker-redis"
+
+- name: enable and start docker-redis
+  ansible.builtin.systemd_service:
+    name: docker-redis
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5

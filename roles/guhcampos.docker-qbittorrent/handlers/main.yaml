@@ -1,0 +1,6 @@
+---
+- name: restart docker-qbittorrent
+  ansible.builtin.systemd_service:
+    name: "docker-qbittorrent"
+    daemon_reload: true
+    state: restarted

@@ -1,0 +1,6 @@
+---
+- name: restart docker-syncthing
+  ansible.builtin.systemd_service:
+    name: "docker-syncthing"
+    daemon_reload: true
+    state: restarted

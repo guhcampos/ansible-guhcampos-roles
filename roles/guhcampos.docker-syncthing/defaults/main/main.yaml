@@ -1,0 +1,39 @@
+---
+syncthing_config_home: "{{syncthing_home}}/config"
+syncthing_data_home: "{{syncthing_home}}/data"
+syncthing_docker_cpu_limit: "1"
+syncthing_docker_image: "{{syncthing_docker_repo}}:{{syncthing_docker_image_tag}}"
+syncthing_docker_mem_limit: "1g"
+syncthing_docker_network_name: "syncthing"
+syncthing_docker_repo: "lscr.io/linuxserver/syncthing"
+syncthing_docker_image_tag: "latest"
+syncthing_home: "/opt/docker-syncthing"
+syncthing_nginx_http_port: 8384
+syncthing_nginx_https_port: 0
+syncthing_nginx_server_name: "syncthing.*"
+syncthing_unix_group_id: "{{syncthing_unix_user_id}}"
+syncthing_unix_group_name: "{{syncthing_unix_user_name}}"
+syncthing_unix_user_id: 8384
+syncthing_unix_user_name: "syncthing"
+syncthing_unix_umask: "002"
+
+# extra docker variables to set
+syncthing_docker_env: {}
+
+# network ports to expose
+syncthing_docker_ports:
+  - "{{syncthing_nginx_http_port}}:{{syncthing_nginx_http_port}}"
+  - "22000:22000/tcp"
+  - "22000:22000/udp"
+  - "21027:21027/udp"
+
+# extra docker volumes to mount
+syncthing_docker_volumes:
+  - "{{syncthing_config_home}}:/config"
+  - "{{syncthing_data_home}}:/data"
+
+syncthing_docker_volumes_extra: {}
+
+
+# nginx related
+nginx_proxy_config_home: "/opt/docker-nginx"

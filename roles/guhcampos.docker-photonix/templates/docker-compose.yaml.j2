@@ -1,0 +1,39 @@
+---
+services:
+  photonix:
+    container_name: "photonix"
+    image: "{{photonix_docker_image}}"
+    restart: unless-stopped
+
+    environment:
+      - PUID={{photonix_unix_user_id}}
+      - PGID={{photonix_unix_group_id}}
+      - UMASK={{photonix_unix_umask}}
+      {% for key,value in photonix_docker_env.items() -%}
+      - {{key}}={{value}}
+      {% endfor +%}
+
+    ports:
+      {% for port in photonix_docker_ports -%}
+      {% if port != "" -%}
+      - {{port}}
+      {% endif -%}
+      {%- endfor +%}
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      {% for volume in photonix_docker_volumes -%}
+      {% if volume != "" -%}
+      - "{{volume}}"
+      {% endif -%}
+      {%- endfor %}
+{% for volume in photonix_docker_volumes_extra -%}
+      {% if volume != "" -%}
+      - "{{volume.src}}:{{volume.dst}}"
+      {% endif -%}
+      {%- endfor +%}
+
+networks:
+  default:
+    name: "{{photonix_docker_network_name}}"
+    external: true

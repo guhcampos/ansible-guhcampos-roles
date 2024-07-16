@@ -1,0 +1,6 @@
+---
+- name: restart docker-redis
+  ansible.builtin.systemd_service:
+    name: "docker-redis"
+    daemon_reload: true
+    state: restarted

@@ -1,0 +1,71 @@
+---
+
+- name: debug
+  debug:
+    var: hostvars[inventory_hostname]
+  tags: debug
+
+
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{radarr_unix_group_name}}"
+    gid: "{{radarr_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{radarr_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart docker-radarr"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{radarr_unix_user_name}}"
+    state: present
+    uid: "{{radarr_unix_user_id}}"
+    group:  "{{radarr_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{radarr_home}}"
+    create_home: false
+
+- name: template docker-compose
+  ansible.builtin.template:
+    src: "docker-compose.yaml.j2"
+    dest: "{{radarr_home}}/docker-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart docker-radarr"
+  tags: [docker-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{radarr_config_home}}"
+    owner: "{{radarr_unix_user_name}}"
+    group: "{{radarr_unix_group_name}}"
+    mode: 0775
+  notify: "restart docker-radarr"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "docker-radarr.service.j2"
+    dest: "/lib/systemd/system/docker-radarr.service"
+  notify: "restart docker-radarr"
+
+- name: enable and start docker-radarr
+  ansible.builtin.systemd_service:
+    name: docker-radarr
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5
+
+- ansible.builtin.include_tasks: "_nginx.yaml"
+  tags: [nginx]

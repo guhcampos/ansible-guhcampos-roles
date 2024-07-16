@@ -1,0 +1,17 @@
+- name: template collector.yaml
+  ansible.builtin.template:
+    src: scrutiny/collector.yaml
+    dest: "{{scrutiny_config_home}}/collector.yaml"
+    mode: 0640
+    owner: scrutiny
+    group: scrutiny
+  notify: restart docker-scrutiny
+
+- name: template scrutiny.yaml
+  ansible.builtin.template:
+    src: scrutiny/scrutiny.yaml
+    dest: "{{scrutiny_config_home}}/scrutiny.yaml"
+    mode: 0640
+    owner: scrutiny
+    group: scrutiny
+  notify: restart docker-scrutiny

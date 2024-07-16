@@ -1,0 +1,10 @@
+version: 1
+host:
+  id: ""
+
+api:
+ endpoint: 'http://localhost:{{scrutiny_nginx_http_port}}'
+
+log:
+ file: '/data/collector.log'
+ level: DEBUG

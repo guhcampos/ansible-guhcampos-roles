@@ -1,0 +1,71 @@
+---
+
+- name: debug
+  debug:
+    var: hostvars[inventory_hostname]
+  tags: debug
+
+
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{rclone_unix_group_name}}"
+    gid: "{{rclone_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{rclone_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart docker-rclone"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{rclone_unix_user_name}}"
+    state: present
+    uid: "{{rclone_unix_user_id}}"
+    group:  "{{rclone_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{rclone_home}}"
+    create_home: false
+
+- name: template docker-compose
+  ansible.builtin.template:
+    src: "docker-compose.yaml.j2"
+    dest: "{{rclone_home}}/docker-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart docker-rclone"
+  tags: [docker-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{rclone_config_home}}"
+    owner: "{{rclone_unix_user_name}}"
+    group: "{{rclone_unix_group_name}}"
+    mode: 0775
+  notify: "restart docker-rclone"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "docker-rclone.service.j2"
+    dest: "/lib/systemd/system/docker-rclone.service"
+  notify: "restart docker-rclone"
+
+- name: enable and start docker-rclone
+  ansible.builtin.systemd_service:
+    name: docker-rclone
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5
+
+- ansible.builtin.include_tasks: "_nginx.yaml"
+  tags: [nginx]

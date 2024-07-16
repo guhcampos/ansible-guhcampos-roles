@@ -1,0 +1,71 @@
+---
+
+- name: debug
+  debug:
+    var: hostvars[inventory_hostname]
+  tags: debug
+
+
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{portainer_unix_group_name}}"
+    gid: "{{portainer_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{portainer_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart docker-portainer"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{portainer_unix_user_name}}"
+    state: present
+    uid: "{{portainer_unix_user_id}}"
+    group:  "{{portainer_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{portainer_home}}"
+    create_home: false
+
+- name: template docker-compose
+  ansible.builtin.template:
+    src: "docker-compose.yaml.j2"
+    dest: "{{portainer_home}}/docker-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart docker-portainer"
+  tags: [docker-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{portainer_config_home}}"
+    owner: "{{portainer_unix_user_name}}"
+    group: "{{portainer_unix_group_name}}"
+    mode: 0775
+  notify: "restart docker-portainer"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "docker-portainer.service.j2"
+    dest: "/lib/systemd/system/docker-portainer.service"
+  notify: "restart docker-portainer"
+
+- name: enable and start docker-portainer
+  ansible.builtin.systemd_service:
+    name: docker-portainer
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5
+
+- ansible.builtin.include_tasks: "_nginx.yaml"
+  tags: [nginx]

@@ -1,0 +1,32 @@
+## Version 2023/06/05 - Changelog: https://github.com/linuxserver/docker-swag/commits/master/root/defaults/nginx/site-confs/default.conf.sample
+
+# redirect all traffic to https
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+
+    include /config/nginx/ssl.conf;
+
+    listen 443 ssl http2 default_server;
+    listen [::]:443 ssl http2 default_server;
+
+    server_name _;
+    index index.html index.htm index.php;
+
+    include /config/nginx/proxy-confs/*.subfolder.conf;
+
+
+    location ~ /\.ht {
+        deny all;
+    }
+}
+
+include /config/nginx/proxy-confs/*.subdomain.conf;
+proxy_cache_path cache/ keys_zone=auth_cache:10m;

@@ -1,0 +1,6 @@
+---
+- name: restart docker-nextcloud
+  ansible.builtin.systemd_service:
+    name: "docker-nextcloud"
+    daemon_reload: true
+    state: restarted

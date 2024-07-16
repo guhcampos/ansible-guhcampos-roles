@@ -1,0 +1,6 @@
+---
+- name: restart docker-netdata
+  ansible.builtin.systemd_service:
+    name: "docker-netdata"
+    daemon_reload: true
+    state: restarted

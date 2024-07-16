@@ -1,0 +1,6 @@
+---
+- name: restart docker-heimdall
+  ansible.builtin.systemd_service:
+    name: "docker-heimdall"
+    daemon_reload: true
+    state: restarted

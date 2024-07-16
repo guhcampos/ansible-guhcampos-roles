@@ -1,0 +1,6 @@
+---
+- name: restart docker-bazarr
+  ansible.builtin.systemd_service:
+    name: "docker-bazarr"
+    daemon_reload: true
+    state: restarted

@@ -1,0 +1,6 @@
+---
+- name: restart docker-archivebox
+  ansible.builtin.systemd_service:
+    name: "docker-archivebox"
+    daemon_reload: true
+    state: restarted

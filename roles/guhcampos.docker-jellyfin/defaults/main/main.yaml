@@ -1,0 +1,36 @@
+---
+jellyfin_config_home: "{{jellyfin_home}}/config"
+jellyfin_data_home: "{{jellyfin_home}}/data"
+jellyfin_docker_cpu_limit: "1"
+jellyfin_docker_image: "{{jellyfin_docker_repo}}:{{jellyfin_docker_image_tag}}"
+jellyfin_docker_mem_limit: "1g"
+jellyfin_docker_network_name: "jellyfin"
+jellyfin_docker_repo: "linuxserver/jellyfin"
+jellyfin_docker_image_tag: "latest"
+jellyfin_home: "/opt/docker-jellyfin"
+jellyfin_nginx_http_port: 8096
+jellyfin_nginx_https_port: 0
+jellyfin_nginx_server_name: "jellyfin.*"
+jellyfin_unix_group_id: "{{jellyfin_unix_user_id}}"
+jellyfin_unix_group_name: "{{jellyfin_unix_user_name}}"
+jellyfin_unix_user_id: 8096
+jellyfin_unix_user_name: "jellyfin"
+jellyfin_unix_umask: "002"
+
+# extra docker variables to set
+jellyfin_docker_env: {}
+
+# network ports to expose
+jellyfin_docker_ports:
+  - "{{jellyfin_nginx_http_port}}:{{jellyfin_nginx_http_port}}"
+
+# extra docker volumes to mount
+jellyfin_docker_volumes:
+  - "{{jellyfin_config_home}}:/config"
+  - "{{jellyfin_data_home}}:/data"
+
+jellyfin_docker_volumes_extra: {}
+
+
+# nginx related
+nginx_proxy_config_home: "/opt/docker-nginx"

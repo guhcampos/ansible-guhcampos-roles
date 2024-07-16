@@ -1,0 +1,6 @@
+---
+- name: restart docker-rclone
+  ansible.builtin.systemd_service:
+    name: "docker-rclone"
+    daemon_reload: true
+    state: restarted

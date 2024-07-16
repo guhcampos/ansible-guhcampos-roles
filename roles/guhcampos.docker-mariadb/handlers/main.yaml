@@ -1,0 +1,6 @@
+---
+- name: restart docker-mariadb
+  ansible.builtin.systemd_service:
+    name: "docker-mariadb"
+    daemon_reload: true
+    state: restarted

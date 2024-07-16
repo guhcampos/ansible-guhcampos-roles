@@ -1,0 +1,39 @@
+---
+services:
+  syncthing:
+    container_name: "syncthing"
+    image: "{{syncthing_docker_image}}"
+    restart: unless-stopped
+
+    environment:
+      - PUID={{syncthing_unix_user_id}}
+      - PGID={{syncthing_unix_group_id}}
+      - UMASK={{syncthing_unix_umask}}
+      {% for key,value in syncthing_docker_env.items() -%}
+      - {{key}}={{value}}
+      {% endfor +%}
+
+    ports:
+      {% for port in syncthing_docker_ports -%}
+      {% if port != "" -%}
+      - {{port}}
+      {% endif -%}
+      {%- endfor +%}
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      {% for volume in syncthing_docker_volumes -%}
+      {% if volume != "" -%}
+      - "{{volume}}"
+      {% endif -%}
+      {%- endfor %}
+{% for volume in syncthing_docker_volumes_extra -%}
+      {% if volume != "" -%}
+      - "{{volume.src}}:{{volume.dst}}"
+      {% endif -%}
+      {%- endfor +%}
+
+networks:
+  default:
+    name: "{{syncthing_docker_network_name}}"
+    external: true

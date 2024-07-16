@@ -1,0 +1,36 @@
+---
+grafana_config_home: "{{grafana_home}}/config"
+grafana_data_home: "{{grafana_home}}/data"
+grafana_docker_cpu_limit: "1"
+grafana_docker_image: "{{grafana_docker_repo}}:{{grafana_docker_image_tag}}"
+grafana_docker_mem_limit: "1g"
+grafana_docker_network_name: "grafana"
+grafana_docker_repo: "grafana/grafana"
+grafana_docker_image_tag: "latest"
+grafana_home: "/opt/docker-grafana"
+grafana_nginx_http_port: 3000
+grafana_nginx_https_port: 0
+grafana_nginx_server_name: "grafana.*"
+grafana_unix_group_id: "{{grafana_unix_user_id}}"
+grafana_unix_group_name: "{{grafana_unix_user_name}}"
+grafana_unix_user_id: 3000
+grafana_unix_user_name: "grafana"
+grafana_unix_umask: "002"
+
+# extra docker variables to set
+grafana_docker_env: {}
+
+# network ports to expose
+grafana_docker_ports:
+  - "{{grafana_nginx_http_port}}:{{grafana_nginx_http_port}}"
+
+# extra docker volumes to mount
+grafana_docker_volumes:
+  - "{{grafana_config_home}}:/config"
+  - "{{grafana_data_home}}:/data"
+
+grafana_docker_volumes_extra: {}
+
+
+# nginx related
+nginx_proxy_config_home: "/opt/docker-nginx"

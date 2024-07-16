@@ -1,0 +1,6 @@
+---
+- name: restart docker-youtubedl
+  ansible.builtin.systemd_service:
+    name: "docker-youtubedl"
+    daemon_reload: true
+    state: restarted

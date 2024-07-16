@@ -1,0 +1,39 @@
+---
+services:
+  mariadb:
+    container_name: "mariadb"
+    image: "{{mariadb_docker_image}}"
+    restart: unless-stopped
+
+    environment:
+      - PUID={{mariadb_unix_user_id}}
+      - PGID={{mariadb_unix_group_id}}
+      - UMASK={{mariadb_unix_umask}}
+      {% for key,value in mariadb_docker_env.items() -%}
+      - {{key}}={{value}}
+      {% endfor +%}
+
+    ports:
+      {% for port in mariadb_docker_ports -%}
+      {% if port != "" -%}
+      - {{port}}
+      {% endif -%}
+      {%- endfor +%}
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      {% for volume in mariadb_docker_volumes -%}
+      {% if volume != "" -%}
+      - "{{volume}}"
+      {% endif -%}
+      {%- endfor %}
+{% for volume in mariadb_docker_volumes_extra -%}
+      {% if volume != "" -%}
+      - "{{volume.src}}:{{volume.dst}}"
+      {% endif -%}
+      {%- endfor +%}
+
+networks:
+  default:
+    name: "{{mariadb_docker_network_name}}"
+    external: true

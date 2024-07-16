@@ -1,0 +1,40 @@
+---
+services:
+  rclone:
+    container_name: "rclone"
+    image: "{{rclone_docker_image}}"
+    command: "rcd --rc-web-gui --rc-web-gui-no-open-browser --rc-web-gui-update --rc-addr :3333 --log-level DEBUG --rc-pass=potato --rc-user=tomato"
+    restart: unless-stopped
+
+    environment:
+      - PUID={{rclone_unix_user_id}}
+      - PGID={{rclone_unix_group_id}}
+      - UMASK={{rclone_unix_umask}}
+      {% for key,value in rclone_docker_env.items() -%}
+      - {{key}}={{value}}
+      {% endfor +%}
+
+    ports:
+      {% for port in rclone_docker_ports -%}
+      {% if port != "" -%}
+      - {{port}}
+      {% endif -%}
+      {%- endfor +%}
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      {% for volume in rclone_docker_volumes -%}
+      {% if volume != "" -%}
+      - "{{volume}}"
+      {% endif -%}
+      {%- endfor %}
+{% for volume in rclone_docker_volumes_extra -%}
+      {% if volume != "" -%}
+      - "{{volume.src}}:{{volume.dst}}"
+      {% endif -%}
+      {%- endfor +%}
+
+networks:
+  default:
+    name: "{{rclone_docker_network_name}}"
+    external: true

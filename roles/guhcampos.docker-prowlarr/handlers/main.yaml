@@ -1,0 +1,6 @@
+---
+- name: restart docker-prowlarr
+  ansible.builtin.systemd_service:
+    name: "docker-prowlarr"
+    daemon_reload: true
+    state: restarted

@@ -1,0 +1,6 @@
+---
+- name: restart docker-scrutiny
+  ansible.builtin.systemd_service:
+    name: "docker-scrutiny"
+    daemon_reload: true
+    state: restarted

@@ -1,0 +1,22 @@
+- name: ensure site-config dir exists
+  file:
+    path: "{{nginx_site_config_home}}"
+    owner: nginx
+    group: nginx
+    mode: 0750
+    state: directory
+
+- name: ensure proxy-config dir exists
+  file:
+    path: "{{nginx_proxy_config_home}}"
+    owner: nginx
+    group: nginx
+    mode: 0750
+    state: directory
+
+- name: replace default.conf with our version
+  ansible.builtin.template:
+    src: "default.conf.j2"
+    dest: "{{nginx_site_config_home}}/default.conf"
+  notify: restart docker-nginx
+  tags: [nginx]

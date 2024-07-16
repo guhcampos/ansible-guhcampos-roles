@@ -1,0 +1,71 @@
+---
+
+- name: debug
+  debug:
+    var: hostvars[inventory_hostname]
+  tags: debug
+
+
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{grafana_unix_group_name}}"
+    gid: "{{grafana_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{grafana_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart docker-grafana"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{grafana_unix_user_name}}"
+    state: present
+    uid: "{{grafana_unix_user_id}}"
+    group:  "{{grafana_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{grafana_home}}"
+    create_home: false
+
+- name: template docker-compose
+  ansible.builtin.template:
+    src: "docker-compose.yaml.j2"
+    dest: "{{grafana_home}}/docker-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart docker-grafana"
+  tags: [docker-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{grafana_config_home}}"
+    owner: "{{grafana_unix_user_name}}"
+    group: "{{grafana_unix_group_name}}"
+    mode: 0775
+  notify: "restart docker-grafana"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "docker-grafana.service.j2"
+    dest: "/lib/systemd/system/docker-grafana.service"
+  notify: "restart docker-grafana"
+
+- name: enable and start docker-grafana
+  ansible.builtin.systemd_service:
+    name: docker-grafana
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5
+
+- ansible.builtin.include_tasks: "_nginx.yaml"
+  tags: [nginx]

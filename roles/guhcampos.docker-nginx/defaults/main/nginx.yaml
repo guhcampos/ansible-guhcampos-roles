@@ -1,0 +1,4 @@
+---
+nginx_dns_config_home: "{{nginx_config_home}}/dns-conf"
+nginx_proxy_config_home: "{{nginx_config_home}}/nginx/proxy-confs"
+nginx_site_config_home: "{{nginx_config_home}}/nginx/site-confs"

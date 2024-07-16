@@ -1,0 +1,71 @@
+---
+
+- name: debug
+  debug:
+    var: hostvars[inventory_hostname]
+  tags: debug
+
+
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{jellyfin_unix_group_name}}"
+    gid: "{{jellyfin_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{jellyfin_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart docker-jellyfin"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{jellyfin_unix_user_name}}"
+    state: present
+    uid: "{{jellyfin_unix_user_id}}"
+    group:  "{{jellyfin_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{jellyfin_home}}"
+    create_home: false
+
+- name: template docker-compose
+  ansible.builtin.template:
+    src: "docker-compose.yaml.j2"
+    dest: "{{jellyfin_home}}/docker-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart docker-jellyfin"
+  tags: [docker-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{jellyfin_config_home}}"
+    owner: "{{jellyfin_unix_user_name}}"
+    group: "{{jellyfin_unix_group_name}}"
+    mode: 0775
+  notify: "restart docker-jellyfin"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "docker-jellyfin.service.j2"
+    dest: "/lib/systemd/system/docker-jellyfin.service"
+  notify: "restart docker-jellyfin"
+
+- name: enable and start docker-jellyfin
+  ansible.builtin.systemd_service:
+    name: docker-jellyfin
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5
+
+- ansible.builtin.include_tasks: "_nginx.yaml"
+  tags: [nginx]

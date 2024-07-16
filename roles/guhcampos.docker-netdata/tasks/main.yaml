@@ -1,0 +1,71 @@
+---
+
+- name: debug
+  debug:
+    var: hostvars[inventory_hostname]
+  tags: debug
+
+
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{netdata_unix_group_name}}"
+    gid: "{{netdata_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{netdata_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart docker-netdata"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{netdata_unix_user_name}}"
+    state: present
+    uid: "{{netdata_unix_user_id}}"
+    group:  "{{netdata_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{netdata_home}}"
+    create_home: false
+
+- name: template docker-compose
+  ansible.builtin.template:
+    src: "docker-compose.yaml.j2"
+    dest: "{{netdata_home}}/docker-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart docker-netdata"
+  tags: [docker-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{netdata_config_home}}"
+    owner: "{{netdata_unix_user_name}}"
+    group: "{{netdata_unix_group_name}}"
+    mode: 0775
+  notify: "restart docker-netdata"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "docker-netdata.service.j2"
+    dest: "/lib/systemd/system/docker-netdata.service"
+  notify: "restart docker-netdata"
+
+- name: enable and start docker-netdata
+  ansible.builtin.systemd_service:
+    name: docker-netdata
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5
+
+- ansible.builtin.include_tasks: "_nginx.yaml"
+  tags: [nginx]

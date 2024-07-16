@@ -1,0 +1,7 @@
+---
+- name: template nginx config
+  ansible.builtin.template:
+    src: "docker-netdata.nginx.subdomain.conf.j2"
+    dest: "{{nginx_proxy_config_home}}/docker-netdata.subdomain.conf"
+  notify: restart docker-nginx
+  tags: [nginx]

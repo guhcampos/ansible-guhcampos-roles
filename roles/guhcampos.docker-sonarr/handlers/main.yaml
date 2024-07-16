@@ -1,0 +1,6 @@
+---
+- name: restart docker-sonarr
+  ansible.builtin.systemd_service:
+    name: "docker-sonarr"
+    daemon_reload: true
+    state: restarted

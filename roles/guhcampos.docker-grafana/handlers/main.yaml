@@ -1,0 +1,6 @@
+---
+- name: restart docker-grafana
+  ansible.builtin.systemd_service:
+    name: "docker-grafana"
+    daemon_reload: true
+    state: restarted

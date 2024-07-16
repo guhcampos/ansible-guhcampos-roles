@@ -1,0 +1,6 @@
+---
+- name: restart docker-radarr
+  ansible.builtin.systemd_service:
+    name: "docker-radarr"
+    daemon_reload: true
+    state: restarted

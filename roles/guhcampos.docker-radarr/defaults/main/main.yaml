@@ -1,0 +1,36 @@
+---
+radarr_config_home: "{{radarr_home}}/config"
+radarr_data_home: "{{radarr_home}}/data"
+radarr_docker_cpu_limit: "1"
+radarr_docker_image: "{{radarr_docker_repo}}:{{radarr_docker_image_tag}}"
+radarr_docker_mem_limit: "1g"
+radarr_docker_network_name: "radarr"
+radarr_docker_repo: "ghcr.io/hotio/radarr"
+radarr_docker_image_tag: "latest"
+radarr_home: "/opt/docker-radarr"
+radarr_nginx_http_port: 7878
+radarr_nginx_https_port: 0
+radarr_nginx_server_name: "radarr.*"
+radarr_unix_group_id: "{{radarr_unix_user_id}}"
+radarr_unix_group_name: "{{radarr_unix_user_name}}"
+radarr_unix_user_id: 7878
+radarr_unix_user_name: "radarr"
+radarr_unix_umask: "002"
+
+# extra docker variables to set
+radarr_docker_env: {}
+
+# network ports to expose
+radarr_docker_ports:
+  - "{{radarr_nginx_http_port}}:{{radarr_nginx_http_port}}"
+
+# extra docker volumes to mount
+radarr_docker_volumes:
+  - "{{radarr_config_home}}:/config"
+  - "{{radarr_data_home}}:/data"
+
+radarr_docker_volumes_extra: {}
+
+
+# nginx related
+nginx_proxy_config_home: "/opt/docker-nginx"
