@@ -1,0 +1,67 @@
+---
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{scrutiny_unix_group_name}}"
+    gid: "{{scrutiny_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{scrutiny_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart podman-scrutiny"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{scrutiny_unix_user_name}}"
+    state: present
+    uid: "{{scrutiny_unix_user_id}}"
+    group:  "{{scrutiny_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{scrutiny_home}}"
+    create_home: false
+
+- name: template podman-compose
+  ansible.builtin.template:
+    src: "podman-compose.yaml.j2"
+    dest: "{{scrutiny_home}}/podman-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart podman-scrutiny"
+  tags: [podman-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{scrutiny_config_home}}"
+    owner: "{{scrutiny_unix_user_name}}"
+    group: "{{scrutiny_unix_group_name}}"
+    mode: "{{scrutiny_unix_mode_config_dir}}"
+  notify: "restart podman-scrutiny"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "podman-scrutiny.service.j2"
+    dest: "/lib/systemd/system/podman-scrutiny.service"
+  notify: "restart podman-scrutiny"
+
+- name: enable and start podman-scrutiny
+  ansible.builtin.systemd_service:
+    name: podman-scrutiny
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5
+
+- ansible.builtin.include_tasks: "_nginx.yaml"
+  tags: [nginx]
+
+- ansible.builtin.include_tasks: "_scrutiny.yaml"
+  tags: [scrutiny]

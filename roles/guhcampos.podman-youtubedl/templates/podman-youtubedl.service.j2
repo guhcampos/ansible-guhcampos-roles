@@ -1,0 +1,15 @@
+[Unit]
+Description=podman youtubedl
+After=podman.service
+Requires=podman.service
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+RemainAfterExit=true
+WorkingDirectory={{youtubedl_home}}
+ExecStart=/usr/bin/podman-compose up -d --remove-orphans
+ExecStop=/usr/bin/podman-compose down
+
+

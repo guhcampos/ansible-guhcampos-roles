@@ -1,0 +1,6 @@
+---
+- name: restart podman-bazarr
+  ansible.builtin.systemd_service:
+    name: "podman-bazarr"
+    daemon_reload: true
+    state: restarted

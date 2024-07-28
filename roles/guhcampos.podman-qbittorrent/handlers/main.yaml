@@ -1,0 +1,6 @@
+---
+- name: restart podman-qbittorrent
+  ansible.builtin.systemd_service:
+    name: "podman-qbittorrent"
+    daemon_reload: true
+    state: restarted

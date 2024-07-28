@@ -1,0 +1,6 @@
+---
+- name: restart podman-syncthing
+  ansible.builtin.systemd_service:
+    name: "podman-syncthing"
+    daemon_reload: true
+    state: restarted

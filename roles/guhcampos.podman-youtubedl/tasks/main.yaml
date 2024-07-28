@@ -1,0 +1,65 @@
+---
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{youtubedl_unix_group_name}}"
+    gid: "{{youtubedl_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{youtubedl_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart podman-youtubedl"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{youtubedl_unix_user_name}}"
+    state: present
+    uid: "{{youtubedl_unix_user_id}}"
+    group:  "{{youtubedl_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{youtubedl_home}}"
+    create_home: false
+
+- name: template podman-compose
+  ansible.builtin.template:
+    src: "podman-compose.yaml.j2"
+    dest: "{{youtubedl_home}}/podman-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart podman-youtubedl"
+  tags: [podman-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{youtubedl_config_home}}"
+    owner: "{{youtubedl_unix_user_name}}"
+    group: "{{youtubedl_unix_group_name}}"
+    mode: "{{youtubedl_unix_mode_config_dir}}"
+  notify: "restart podman-youtubedl"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "podman-youtubedl.service.j2"
+    dest: "/lib/systemd/system/podman-youtubedl.service"
+  notify: "restart podman-youtubedl"
+
+- name: enable and start podman-youtubedl
+  ansible.builtin.systemd_service:
+    name: podman-youtubedl
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5
+
+- ansible.builtin.include_tasks: "_nginx.yaml"
+  tags: [nginx]
+

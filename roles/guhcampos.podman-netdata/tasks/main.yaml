@@ -1,0 +1,65 @@
+---
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{netdata_unix_group_name}}"
+    gid: "{{netdata_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{netdata_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart podman-netdata"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{netdata_unix_user_name}}"
+    state: present
+    uid: "{{netdata_unix_user_id}}"
+    group:  "{{netdata_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{netdata_home}}"
+    create_home: false
+
+- name: template podman-compose
+  ansible.builtin.template:
+    src: "podman-compose.yaml.j2"
+    dest: "{{netdata_home}}/podman-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart podman-netdata"
+  tags: [podman-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{netdata_config_home}}"
+    owner: "{{netdata_unix_user_name}}"
+    group: "{{netdata_unix_group_name}}"
+    mode: "{{netdata_unix_mode_config_dir}}"
+  notify: "restart podman-netdata"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "podman-netdata.service.j2"
+    dest: "/lib/systemd/system/podman-netdata.service"
+  notify: "restart podman-netdata"
+
+- name: enable and start podman-netdata
+  ansible.builtin.systemd_service:
+    name: podman-netdata
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5
+
+- ansible.builtin.include_tasks: "_nginx.yaml"
+  tags: [nginx]
+

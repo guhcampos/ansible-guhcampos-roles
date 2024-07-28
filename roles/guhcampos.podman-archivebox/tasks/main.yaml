@@ -1,0 +1,65 @@
+---
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{archivebox_unix_group_name}}"
+    gid: "{{archivebox_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{archivebox_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart podman-archivebox"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{archivebox_unix_user_name}}"
+    state: present
+    uid: "{{archivebox_unix_user_id}}"
+    group:  "{{archivebox_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{archivebox_home}}"
+    create_home: false
+
+- name: template podman-compose
+  ansible.builtin.template:
+    src: "podman-compose.yaml.j2"
+    dest: "{{archivebox_home}}/podman-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart podman-archivebox"
+  tags: [podman-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{archivebox_config_home}}"
+    owner: "{{archivebox_unix_user_name}}"
+    group: "{{archivebox_unix_group_name}}"
+    mode: "{{archivebox_unix_mode_config_dir}}"
+  notify: "restart podman-archivebox"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "podman-archivebox.service.j2"
+    dest: "/lib/systemd/system/podman-archivebox.service"
+  notify: "restart podman-archivebox"
+
+- name: enable and start podman-archivebox
+  ansible.builtin.systemd_service:
+    name: podman-archivebox
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5
+
+- ansible.builtin.include_tasks: "_nginx.yaml"
+  tags: [nginx]
+

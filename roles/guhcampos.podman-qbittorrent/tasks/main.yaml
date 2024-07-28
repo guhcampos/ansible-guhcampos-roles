@@ -1,0 +1,65 @@
+---
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{qbittorrent_unix_group_name}}"
+    gid: "{{qbittorrent_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{qbittorrent_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart podman-qbittorrent"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{qbittorrent_unix_user_name}}"
+    state: present
+    uid: "{{qbittorrent_unix_user_id}}"
+    group:  "{{qbittorrent_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{qbittorrent_home}}"
+    create_home: false
+
+- name: template podman-compose
+  ansible.builtin.template:
+    src: "podman-compose.yaml.j2"
+    dest: "{{qbittorrent_home}}/podman-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart podman-qbittorrent"
+  tags: [podman-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{qbittorrent_config_home}}"
+    owner: "{{qbittorrent_unix_user_name}}"
+    group: "{{qbittorrent_unix_group_name}}"
+    mode: "{{qbittorrent_unix_mode_config_dir}}"
+  notify: "restart podman-qbittorrent"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "podman-qbittorrent.service.j2"
+    dest: "/lib/systemd/system/podman-qbittorrent.service"
+  notify: "restart podman-qbittorrent"
+
+- name: enable and start podman-qbittorrent
+  ansible.builtin.systemd_service:
+    name: podman-qbittorrent
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5
+
+- ansible.builtin.include_tasks: "_nginx.yaml"
+  tags: [nginx]
+

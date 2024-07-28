@@ -1,0 +1,6 @@
+---
+- name: restart podman-grafana
+  ansible.builtin.systemd_service:
+    name: "podman-grafana"
+    daemon_reload: true
+    state: restarted

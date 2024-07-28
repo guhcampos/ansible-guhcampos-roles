@@ -1,0 +1,65 @@
+---
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{transmission_unix_group_name}}"
+    gid: "{{transmission_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{transmission_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart podman-transmission"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{transmission_unix_user_name}}"
+    state: present
+    uid: "{{transmission_unix_user_id}}"
+    group:  "{{transmission_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{transmission_home}}"
+    create_home: false
+
+- name: template podman-compose
+  ansible.builtin.template:
+    src: "podman-compose.yaml.j2"
+    dest: "{{transmission_home}}/podman-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart podman-transmission"
+  tags: [podman-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{transmission_config_home}}"
+    owner: "{{transmission_unix_user_name}}"
+    group: "{{transmission_unix_group_name}}"
+    mode: "{{transmission_unix_mode_config_dir}}"
+  notify: "restart podman-transmission"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "podman-transmission.service.j2"
+    dest: "/lib/systemd/system/podman-transmission.service"
+  notify: "restart podman-transmission"
+
+- name: enable and start podman-transmission
+  ansible.builtin.systemd_service:
+    name: podman-transmission
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5
+
+- ansible.builtin.include_tasks: "_nginx.yaml"
+  tags: [nginx]
+

@@ -1,11 +1,11 @@
 ---
 prowlarr_config_home: "{{prowlarr_home}}/config"
-prowlarr_docker_cpu_limit: "1"
-prowlarr_docker_image: "{{prowlarr_docker_repo}}:{{prowlarr_docker_image_tag}}"
-prowlarr_docker_mem_limit: "1g"
-prowlarr_docker_network_name: "prowlarr"
-prowlarr_docker_repo: "ghcr.io/hotio/prowlarr"
-prowlarr_docker_image_tag: "latest"
+prowlarr_container_cpu_limit: "1"
+prowlarr_container_image: "{{prowlarr_container_repo}}:{{prowlarr_container_image_tag}}"
+prowlarr_container_mem_limit: "1g"
+prowlarr_container_network_name: "prowlarr"
+prowlarr_container_repo: "ghcr.io/hotio/prowlarr"
+prowlarr_container_image_tag: "latest"
 prowlarr_home: "/opt/docker-prowlarr"
 prowlarr_nginx_http_port: 9696
 prowlarr_nginx_https_port: 0
@@ -19,17 +19,17 @@ prowlarr_unix_user_name: "prowlarr"
 prowlarr_unix_umask: "002"
 prowlarr_unix_mode_config_dir: "0750"
 
-prowlarr_docker_devices: []
+prowlarr_container_devices: []
 
-# extra docker variables to set
-prowlarr_docker_env: {}
+# extra container variables to set
+prowlarr_container_env: {}
 
 # network ports to expose
-prowlarr_docker_ports:
+prowlarr_container_ports:
   - "{{prowlarr_nginx_http_port}}:{{prowlarr_nginx_http_port}}"
 
-# extra docker volumes to mount
-prowlarr_docker_volumes:
+# extra container volumes to mount
+prowlarr_container_volumes:
   - "{{prowlarr_config_home}}:/config"
 
-prowlarr_docker_volumes_extra: {}
+prowlarr_container_volumes_extra: {}

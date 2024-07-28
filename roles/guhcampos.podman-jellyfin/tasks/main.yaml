@@ -1,0 +1,65 @@
+---
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{jellyfin_unix_group_name}}"
+    gid: "{{jellyfin_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{jellyfin_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart podman-jellyfin"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{jellyfin_unix_user_name}}"
+    state: present
+    uid: "{{jellyfin_unix_user_id}}"
+    group:  "{{jellyfin_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{jellyfin_home}}"
+    create_home: false
+
+- name: template podman-compose
+  ansible.builtin.template:
+    src: "podman-compose.yaml.j2"
+    dest: "{{jellyfin_home}}/podman-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart podman-jellyfin"
+  tags: [podman-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{jellyfin_config_home}}"
+    owner: "{{jellyfin_unix_user_name}}"
+    group: "{{jellyfin_unix_group_name}}"
+    mode: "{{jellyfin_unix_mode_config_dir}}"
+  notify: "restart podman-jellyfin"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "podman-jellyfin.service.j2"
+    dest: "/lib/systemd/system/podman-jellyfin.service"
+  notify: "restart podman-jellyfin"
+
+- name: enable and start podman-jellyfin
+  ansible.builtin.systemd_service:
+    name: podman-jellyfin
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5
+
+- ansible.builtin.include_tasks: "_nginx.yaml"
+  tags: [nginx]
+

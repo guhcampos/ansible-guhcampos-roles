@@ -1,0 +1,6 @@
+---
+- name: restart podman-scrutiny
+  ansible.builtin.systemd_service:
+    name: "podman-scrutiny"
+    daemon_reload: true
+    state: restarted

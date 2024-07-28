@@ -1,0 +1,15 @@
+---
+- name: ensure proxy-config dir exists
+  file:
+    path: "{{nginx_proxy_config_home}}"
+    owner: nginx
+    group: nginx
+    mode: "{{nginx_unix_mode_config_dir}}"
+    state: directory
+
+- name: template nginx config
+  ansible.builtin.template:
+    src: "podman-archivebox.nginx.subdomain.conf.j2"
+    dest: "{{nginx_proxy_config_home}}/podman-archivebox.subdomain.conf"
+  notify: restart podman-nginx
+  tags: [nginx]

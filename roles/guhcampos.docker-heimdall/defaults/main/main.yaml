@@ -1,12 +1,12 @@
 ---
 heimdall_config_home: "{{heimdall_home}}/config"
 heimdall_data_home: "{{heimdall_home}}/data"
-heimdall_docker_cpu_limit: "1"
-heimdall_docker_image: "{{heimdall_docker_repo}}:{{heimdall_docker_image_tag}}"
-heimdall_docker_mem_limit: "1g"
-heimdall_docker_network_name: "heimdall"
-heimdall_docker_repo: "lscr.io/linuxserver/heimdall"
-heimdall_docker_image_tag: "latest"
+heimdall_container_cpu_limit: "1"
+heimdall_container_image: "{{heimdall_container_repo}}:{{heimdall_container_image_tag}}"
+heimdall_container_mem_limit: "1g"
+heimdall_container_network_name: "heimdall"
+heimdall_container_repo: "lscr.io/linuxserver/heimdall"
+heimdall_container_image_tag: "latest"
 heimdall_home: "/opt/docker-heimdall"
 heimdall_nginx_http_port: 8081
 heimdall_nginx_https_port: 0
@@ -20,18 +20,18 @@ heimdall_unix_user_name: "heimdall"
 heimdall_unix_umask: "002"
 heimdall_unix_mode_config_dir: "0750"
 
-heimdall_docker_devices: []
+heimdall_container_devices: []
 
-# extra docker variables to set
-heimdall_docker_env: {}
+# extra container variables to set
+heimdall_container_env: {}
 
 # network ports to expose
-heimdall_docker_ports:
+heimdall_container_ports:
   - "{{heimdall_nginx_http_port}}:{{heimdall_nginx_http_port}}"
 
-# extra docker volumes to mount
-heimdall_docker_volumes:
+# extra container volumes to mount
+heimdall_container_volumes:
   - "{{heimdall_config_home}}:/config"
   - "{{heimdall_data_home}}:/data"
 
-heimdall_docker_volumes_extra: {}
+heimdall_container_volumes_extra: {}

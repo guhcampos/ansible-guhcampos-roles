@@ -1,0 +1,65 @@
+---
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{radarr_unix_group_name}}"
+    gid: "{{radarr_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{radarr_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart podman-radarr"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{radarr_unix_user_name}}"
+    state: present
+    uid: "{{radarr_unix_user_id}}"
+    group:  "{{radarr_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{radarr_home}}"
+    create_home: false
+
+- name: template podman-compose
+  ansible.builtin.template:
+    src: "podman-compose.yaml.j2"
+    dest: "{{radarr_home}}/podman-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart podman-radarr"
+  tags: [podman-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{radarr_config_home}}"
+    owner: "{{radarr_unix_user_name}}"
+    group: "{{radarr_unix_group_name}}"
+    mode: "{{radarr_unix_mode_config_dir}}"
+  notify: "restart podman-radarr"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "podman-radarr.service.j2"
+    dest: "/lib/systemd/system/podman-radarr.service"
+  notify: "restart podman-radarr"
+
+- name: enable and start podman-radarr
+  ansible.builtin.systemd_service:
+    name: podman-radarr
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5
+
+- ansible.builtin.include_tasks: "_nginx.yaml"
+  tags: [nginx]
+

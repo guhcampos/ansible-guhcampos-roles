@@ -1,0 +1,65 @@
+---
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{bazarr_unix_group_name}}"
+    gid: "{{bazarr_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{bazarr_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart podman-bazarr"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{bazarr_unix_user_name}}"
+    state: present
+    uid: "{{bazarr_unix_user_id}}"
+    group:  "{{bazarr_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{bazarr_home}}"
+    create_home: false
+
+- name: template podman-compose
+  ansible.builtin.template:
+    src: "podman-compose.yaml.j2"
+    dest: "{{bazarr_home}}/podman-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart podman-bazarr"
+  tags: [podman-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{bazarr_config_home}}"
+    owner: "{{bazarr_unix_user_name}}"
+    group: "{{bazarr_unix_group_name}}"
+    mode: "{{bazarr_unix_mode_config_dir}}"
+  notify: "restart podman-bazarr"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "podman-bazarr.service.j2"
+    dest: "/lib/systemd/system/podman-bazarr.service"
+  notify: "restart podman-bazarr"
+
+- name: enable and start podman-bazarr
+  ansible.builtin.systemd_service:
+    name: podman-bazarr
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5
+
+- ansible.builtin.include_tasks: "_nginx.yaml"
+  tags: [nginx]
+

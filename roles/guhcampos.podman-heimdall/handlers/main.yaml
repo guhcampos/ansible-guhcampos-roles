@@ -1,0 +1,6 @@
+---
+- name: restart podman-heimdall
+  ansible.builtin.systemd_service:
+    name: "podman-heimdall"
+    daemon_reload: true
+    state: restarted

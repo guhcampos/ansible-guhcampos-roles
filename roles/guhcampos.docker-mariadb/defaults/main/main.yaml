@@ -1,12 +1,12 @@
 ---
 mariadb_config_home: "{{mariadb_home}}/config"
 mariadb_data_home: "{{mariadb_home}}/data"
-mariadb_docker_cpu_limit: "1"
-mariadb_docker_image: "{{mariadb_docker_repo}}:{{mariadb_docker_image_tag}}"
-mariadb_docker_mem_limit: "1g"
-mariadb_docker_network_name: "mariadb"
-mariadb_docker_repo: "lscr.io/linuxserver/mariadb"
-mariadb_docker_image_tag: "latest"
+mariadb_container_cpu_limit: "1"
+mariadb_container_image: "{{mariadb_container_repo}}:{{mariadb_container_image_tag}}"
+mariadb_container_mem_limit: "1g"
+mariadb_container_network_name: "mariadb"
+mariadb_container_repo: "lscr.io/linuxserver/mariadb"
+mariadb_container_image_tag: "latest"
 mariadb_home: "/opt/docker-mariadb"
 mariadb_nginx_http_port: 0
 mariadb_nginx_https_port: 0
@@ -19,18 +19,18 @@ mariadb_unix_user_name: "mariadb"
 mariadb_unix_umask: "002"
 mariadb_unix_mode_config_dir: "0750"
 
-mariadb_docker_devices: []
+mariadb_container_devices: []
 
-# extra docker variables to set
-mariadb_docker_env: {}
+# extra container variables to set
+mariadb_container_env: {}
 
 # network ports to expose
-mariadb_docker_ports:
+mariadb_container_ports:
   - "3306:3306/tcp"
 
-# extra docker volumes to mount
-mariadb_docker_volumes:
+# extra container volumes to mount
+mariadb_container_volumes:
   - "{{mariadb_config_home}}:/config"
   - "{{mariadb_data_home}}:/data"
 
-mariadb_docker_volumes_extra: {}
+mariadb_container_volumes_extra: {}

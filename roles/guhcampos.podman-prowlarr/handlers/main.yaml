@@ -1,0 +1,6 @@
+---
+- name: restart podman-prowlarr
+  ansible.builtin.systemd_service:
+    name: "podman-prowlarr"
+    daemon_reload: true
+    state: restarted

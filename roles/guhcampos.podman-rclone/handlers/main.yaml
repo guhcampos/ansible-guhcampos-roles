@@ -1,0 +1,6 @@
+---
+- name: restart podman-rclone
+  ansible.builtin.systemd_service:
+    name: "podman-rclone"
+    daemon_reload: true
+    state: restarted

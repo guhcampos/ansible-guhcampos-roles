@@ -1,0 +1,6 @@
+---
+- name: restart podman-transmission
+  ansible.builtin.systemd_service:
+    name: "podman-transmission"
+    daemon_reload: true
+    state: restarted

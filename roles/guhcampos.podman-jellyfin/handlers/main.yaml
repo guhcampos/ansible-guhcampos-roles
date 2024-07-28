@@ -1,0 +1,6 @@
+---
+- name: restart podman-jellyfin
+  ansible.builtin.systemd_service:
+    name: "podman-jellyfin"
+    daemon_reload: true
+    state: restarted

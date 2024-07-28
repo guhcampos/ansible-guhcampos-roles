@@ -1,0 +1,6 @@
+---
+- name: restart podman-sonarr
+  ansible.builtin.systemd_service:
+    name: "podman-sonarr"
+    daemon_reload: true
+    state: restarted

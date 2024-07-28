@@ -1,12 +1,12 @@
 ---
 bazarr_config_home: "{{bazarr_home}}/config"
 bazarr_data_home: "{{bazarr_home}}/data"
-bazarr_docker_cpu_limit: "1"
-bazarr_docker_image: "{{bazarr_docker_repo}}:{{bazarr_docker_image_tag}}"
-bazarr_docker_mem_limit: "1g"
-bazarr_docker_network_name: "bazarr"
-bazarr_docker_repo: "ghcr.io/hotio/bazarr"
-bazarr_docker_image_tag: "latest"
+bazarr_container_cpu_limit: "1"
+bazarr_container_image: "{{bazarr_container_repo}}:{{bazarr_container_image_tag}}"
+bazarr_container_mem_limit: "1g"
+bazarr_container_network_name: "bazarr"
+bazarr_container_repo: "ghcr.io/hotio/bazarr"
+bazarr_container_image_tag: "latest"
 bazarr_home: "/opt/docker-bazarr"
 bazarr_nginx_http_port: 6767
 bazarr_nginx_https_port: 0
@@ -20,18 +20,18 @@ bazarr_unix_user_name: "bazarr"
 bazarr_unix_umask: "027"
 bazarr_unix_mode_config_dir: "0750"
 
-bazarr_docker_devices: []
+bazarr_container_devices: []
 
-# extra docker variables to set
-bazarr_docker_env: {}
+# extra container variables to set
+bazarr_container_env: {}
 
 # network ports to expose
-bazarr_docker_ports:
+bazarr_container_ports:
   - "{{bazarr_nginx_http_port}}:{{bazarr_nginx_http_port}}"
 
-# extra docker volumes to mount
-bazarr_docker_volumes:
+# extra container volumes to mount
+bazarr_container_volumes:
   - "{{bazarr_config_home}}:/config"
   - "{{bazarr_data_home}}:/data"
 
-bazarr_docker_volumes_extra: {}
+bazarr_container_volumes_extra: {}

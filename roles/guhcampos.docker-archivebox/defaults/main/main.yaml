@@ -1,13 +1,13 @@
 ---
 archivebox_config_home: "{{archivebox_home}}/config"
 archivebox_data_home: "{{archivebox_home}}/data"
-archivebox_docker_command: "server --quick-init 0.0.0.0:{{archivebox_http_port}}"
-archivebox_docker_cpu_limit: "1"
-archivebox_docker_image: "{{archivebox_docker_repo}}:{{archivebox_docker_image_tag}}"
-archivebox_docker_mem_limit: "1g"
-archivebox_docker_network_name: "archivebox"
-archivebox_docker_repo: "archivebox/archivebox"
-archivebox_docker_image_tag: "latest"
+archivebox_container_command: "server --quick-init 0.0.0.0:{{archivebox_http_port}}"
+archivebox_container_cpu_limit: "1"
+archivebox_container_image: "{{archivebox_container_repo}}:{{archivebox_container_image_tag}}"
+archivebox_container_mem_limit: "1g"
+archivebox_container_network_name: "archivebox"
+archivebox_container_repo: "archivebox/archivebox"
+archivebox_container_image_tag: "latest"
 archivebox_home: "/opt/docker-archivebox"
 archivebox_nginx_http_port: 4444
 archivebox_nginx_https_port: 0
@@ -21,10 +21,10 @@ archivebox_unix_user_name: "archivebox"
 archivebox_unix_umask: "002"
 archivebox_unix_mode_config_dir: "0750"
 
-archivebox_docker_devices: []
+archivebox_container_devices: []
 
-# extra docker variables to set
-archivebox_docker_env:
+# extra container variables to set
+archivebox_container_env:
   ALLOWED_HOSTS: "localhost"
   CHECK_SSL_VALIDITY: "False"
   MEDIA_MAX_SIZE: "750m"
@@ -39,12 +39,12 @@ archivebox_docker_env:
   SAVE_GIT: "False"
 
 # network ports to expose
-archivebox_docker_ports:
+archivebox_container_ports:
   - "{{archivebox_nginx_http_port}}:{{archivebox_nginx_http_port}}"
 
-# extra docker volumes to mount
-archivebox_docker_volumes:
+# extra container volumes to mount
+archivebox_container_volumes:
   - "{{archivebox_config_home}}:/config"
   - "{{archivebox_data_home}}:/data"
 
-archivebox_docker_volumes_extra: {}
+archivebox_container_volumes_extra: {}

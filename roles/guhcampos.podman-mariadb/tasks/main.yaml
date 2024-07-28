@@ -1,0 +1,63 @@
+---
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{mariadb_unix_group_name}}"
+    gid: "{{mariadb_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{mariadb_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart podman-mariadb"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{mariadb_unix_user_name}}"
+    state: present
+    uid: "{{mariadb_unix_user_id}}"
+    group:  "{{mariadb_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{mariadb_home}}"
+    create_home: false
+
+- name: template podman-compose
+  ansible.builtin.template:
+    src: "podman-compose.yaml.j2"
+    dest: "{{mariadb_home}}/podman-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart podman-mariadb"
+  tags: [podman-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{mariadb_config_home}}"
+    owner: "{{mariadb_unix_user_name}}"
+    group: "{{mariadb_unix_group_name}}"
+    mode: "{{mariadb_unix_mode_config_dir}}"
+  notify: "restart podman-mariadb"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "podman-mariadb.service.j2"
+    dest: "/lib/systemd/system/podman-mariadb.service"
+  notify: "restart podman-mariadb"
+
+- name: enable and start podman-mariadb
+  ansible.builtin.systemd_service:
+    name: podman-mariadb
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5
+
+

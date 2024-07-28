@@ -1,12 +1,12 @@
 ---
 transmission_config_home: "{{transmission_home}}/config"
 transmission_data_home: "{{transmission_home}}/data"
-transmission_docker_cpu_limit: "1"
-transmission_docker_image: "{{transmission_docker_repo}}:{{transmission_docker_image_tag}}"
-transmission_docker_mem_limit: "1g"
-transmission_docker_network_name: "transmission"
-transmission_docker_repo: "lscr.io/linuxserver/transmission"
-transmission_docker_image_tag: "latest"
+transmission_container_cpu_limit: "1"
+transmission_container_image: "{{transmission_container_repo}}:{{transmission_container_image_tag}}"
+transmission_container_mem_limit: "1g"
+transmission_container_network_name: "transmission"
+transmission_container_repo: "lscr.io/linuxserver/transmission"
+transmission_container_image_tag: "latest"
 transmission_home: "/opt/docker-transmission"
 transmission_nginx_http_port: 9091
 transmission_nginx_https_port: 0
@@ -20,18 +20,18 @@ transmission_unix_user_name: "transmission"
 transmission_unix_umask: "002"
 transmission_unix_mode_config_dir: "0750"
 
-transmission_docker_devices: []
+transmission_container_devices: []
 
-# extra docker variables to set
-transmission_docker_env: {}
+# extra container variables to set
+transmission_container_env: {}
 
 # network ports to expose
-transmission_docker_ports:
+transmission_container_ports:
   - "{{transmission_nginx_http_port}}:{{transmission_nginx_http_port}}"
 
-# extra docker volumes to mount
-transmission_docker_volumes:
+# extra container volumes to mount
+transmission_container_volumes:
   - "{{transmission_config_home}}:/config"
   - "{{transmission_data_home}}:/data"
 
-transmission_docker_volumes_extra: {}
+transmission_container_volumes_extra: {}

@@ -1,12 +1,12 @@
 ---
 portainer_config_home: "{{portainer_home}}/config"
 portainer_data_home: "{{portainer_home}}/data"
-portainer_docker_cpu_limit: "1"
-portainer_docker_image: "{{portainer_docker_repo}}:{{portainer_docker_image_tag}}"
-portainer_docker_mem_limit: "1g"
-portainer_docker_network_name: "portainer"
-portainer_docker_repo: "portainer/portainer-ce"
-portainer_docker_image_tag: "latest"
+portainer_container_cpu_limit: "1"
+portainer_container_image: "{{portainer_container_repo}}:{{portainer_container_image_tag}}"
+portainer_container_mem_limit: "1g"
+portainer_container_network_name: "portainer"
+portainer_container_repo: "portainer/portainer-ce"
+portainer_container_image_tag: "latest"
 portainer_home: "/opt/docker-portainer"
 portainer_nginx_http_port: 9443
 portainer_nginx_https_port: 0
@@ -20,18 +20,18 @@ portainer_unix_user_name: "portainer"
 portainer_unix_umask: "002"
 portainer_unix_mode_config_dir: "0750"
 
-portainer_docker_devices: []
+portainer_container_devices: []
 
-# extra docker variables to set
-portainer_docker_env: {}
+# extra container variables to set
+portainer_container_env: {}
 
 # network ports to expose
-portainer_docker_ports:
+portainer_container_ports:
   - "{{portainer_nginx_http_port}}:{{portainer_nginx_http_port}}"
 
-# extra docker volumes to mount
-portainer_docker_volumes:
+# extra container volumes to mount
+portainer_container_volumes:
   - "{{portainer_config_home}}:/config"
-  - "/var/run/docker.sock:/var/run/docker.sock"
+  - "/var/run/container.sock:/var/run/container.sock"
 
-portainer_docker_volumes_extra: {}
+portainer_container_volumes_extra: {}

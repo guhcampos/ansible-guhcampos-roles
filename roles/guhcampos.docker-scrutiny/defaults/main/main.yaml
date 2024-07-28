@@ -1,12 +1,12 @@
 ---
 scrutiny_config_home: "{{scrutiny_home}}/config"
 scrutiny_data_home: "{{scrutiny_home}}/data"
-scrutiny_docker_cpu_limit: "1"
-scrutiny_docker_image: "{{scrutiny_docker_repo}}:{{scrutiny_docker_image_tag}}"
-scrutiny_docker_mem_limit: "1g"
-scrutiny_docker_network_name: "scrutiny"
-scrutiny_docker_repo: "ghcr.io/analogj/scrutiny"
-scrutiny_docker_image_tag: "master-omnibus"
+scrutiny_container_cpu_limit: "1"
+scrutiny_container_image: "{{scrutiny_container_repo}}:{{scrutiny_container_image_tag}}"
+scrutiny_container_mem_limit: "1g"
+scrutiny_container_network_name: "scrutiny"
+scrutiny_container_repo: "ghcr.io/analogj/scrutiny"
+scrutiny_container_image_tag: "master-omnibus"
 scrutiny_home: "/opt/docker-scrutiny"
 scrutiny_nginx_http_port: 2999
 scrutiny_nginx_https_port: 0
@@ -20,21 +20,21 @@ scrutiny_unix_user_name: "scrutiny"
 scrutiny_unix_umask: "002"
 scrutiny_unix_mode_config_dir: "0750"
 
-scrutiny_docker_devices: []
+scrutiny_container_devices: []
 
-# extra docker variables to set
-scrutiny_docker_env:
+# extra container variables to set
+scrutiny_container_env:
   COLLECTOR_RUN_STARTUP: "true"
 
 # network ports to expose
-scrutiny_docker_ports:
+scrutiny_container_ports:
   - "{{scrutiny_nginx_http_port}}:{{scrutiny_nginx_http_port}}"
 
-# extra docker volumes to mount
-scrutiny_docker_volumes:
+# extra container volumes to mount
+scrutiny_container_volumes:
   - "{{scrutiny_config_home}}:/opt/scrutiny/config"
   - "{{scrutiny_data_home}}/influxdb:/opt/scrutiny/influxdb"
   - "/run/udev:/run/udev:ro"
   - "{{scrutiny_data_home}}:/data"
 
-scrutiny_docker_volumes_extra: {}
+scrutiny_container_volumes_extra: {}

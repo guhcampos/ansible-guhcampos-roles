@@ -1,0 +1,6 @@
+---
+- name: restart podman-youtubedl
+  ansible.builtin.systemd_service:
+    name: "podman-youtubedl"
+    daemon_reload: true
+    state: restarted

@@ -1,0 +1,6 @@
+---
+- name: restart podman-netdata
+  ansible.builtin.systemd_service:
+    name: "podman-netdata"
+    daemon_reload: true
+    state: restarted

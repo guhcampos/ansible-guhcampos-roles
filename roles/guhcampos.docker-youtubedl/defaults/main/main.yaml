@@ -1,12 +1,12 @@
 ---
 youtubedl_config_home: "{{youtubedl_home}}/config"
 youtubedl_data_home: "{{youtubedl_home}}/data"
-youtubedl_docker_cpu_limit: "1"
-youtubedl_docker_image: "{{youtubedl_docker_repo}}:{{youtubedl_docker_image_tag}}"
-youtubedl_docker_mem_limit: "1g"
-youtubedl_docker_network_name: "youtubedl"
-youtubedl_docker_repo: "tzahi12345/youtubedl-material"
-youtubedl_docker_image_tag: "latest"
+youtubedl_container_cpu_limit: "1"
+youtubedl_container_image: "{{youtubedl_container_repo}}:{{youtubedl_container_image_tag}}"
+youtubedl_container_mem_limit: "1g"
+youtubedl_container_network_name: "youtubedl"
+youtubedl_container_repo: "tzahi12345/youtubedl-material"
+youtubedl_container_image_tag: "latest"
 youtubedl_home: "/opt/docker-youtubedl"
 youtubedl_nginx_http_port: 8998
 youtubedl_nginx_https_port: 0
@@ -20,18 +20,18 @@ youtubedl_unix_user_name: "youtubedl"
 youtubedl_unix_umask: "002"
 youtubedl_unix_mode_config_dir: "0750"
 
-youtubedl_docker_devices: []
+youtubedl_container_devices: []
 
-# extra docker variables to set
-youtubedl_docker_env: {}
+# extra container variables to set
+youtubedl_container_env: {}
 
 # network ports to expose
-youtubedl_docker_ports:
+youtubedl_container_ports:
   - "{{youtubedl_nginx_http_port}}:{{youtubedl_nginx_http_port}}"
 
-# extra docker volumes to mount
-youtubedl_docker_volumes:
+# extra container volumes to mount
+youtubedl_container_volumes:
   - "{{youtubedl_config_home}}:/config"
   - "{{youtubedl_data_home}}:/data"
 
-youtubedl_docker_volumes_extra: {}
+youtubedl_container_volumes_extra: {}

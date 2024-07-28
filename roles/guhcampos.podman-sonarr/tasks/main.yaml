@@ -1,0 +1,65 @@
+---
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{sonarr_unix_group_name}}"
+    gid: "{{sonarr_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{sonarr_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart podman-sonarr"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{sonarr_unix_user_name}}"
+    state: present
+    uid: "{{sonarr_unix_user_id}}"
+    group:  "{{sonarr_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{sonarr_home}}"
+    create_home: false
+
+- name: template podman-compose
+  ansible.builtin.template:
+    src: "podman-compose.yaml.j2"
+    dest: "{{sonarr_home}}/podman-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart podman-sonarr"
+  tags: [podman-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{sonarr_config_home}}"
+    owner: "{{sonarr_unix_user_name}}"
+    group: "{{sonarr_unix_group_name}}"
+    mode: "{{sonarr_unix_mode_config_dir}}"
+  notify: "restart podman-sonarr"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "podman-sonarr.service.j2"
+    dest: "/lib/systemd/system/podman-sonarr.service"
+  notify: "restart podman-sonarr"
+
+- name: enable and start podman-sonarr
+  ansible.builtin.systemd_service:
+    name: podman-sonarr
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5
+
+- ansible.builtin.include_tasks: "_nginx.yaml"
+  tags: [nginx]
+

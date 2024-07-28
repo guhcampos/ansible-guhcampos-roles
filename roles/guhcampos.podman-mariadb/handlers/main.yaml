@@ -1,0 +1,6 @@
+---
+- name: restart podman-mariadb
+  ansible.builtin.systemd_service:
+    name: "podman-mariadb"
+    daemon_reload: true
+    state: restarted

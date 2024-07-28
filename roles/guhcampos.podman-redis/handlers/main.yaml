@@ -1,0 +1,6 @@
+---
+- name: restart podman-redis
+  ansible.builtin.systemd_service:
+    name: "podman-redis"
+    daemon_reload: true
+    state: restarted

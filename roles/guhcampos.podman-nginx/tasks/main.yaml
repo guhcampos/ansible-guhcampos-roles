@@ -1,0 +1,67 @@
+---
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{nginx_unix_group_name}}"
+    gid: "{{nginx_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{nginx_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart podman-nginx"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{nginx_unix_user_name}}"
+    state: present
+    uid: "{{nginx_unix_user_id}}"
+    group:  "{{nginx_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{nginx_home}}"
+    create_home: false
+
+- name: template podman-compose
+  ansible.builtin.template:
+    src: "podman-compose.yaml.j2"
+    dest: "{{nginx_home}}/podman-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart podman-nginx"
+  tags: [podman-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{nginx_config_home}}"
+    owner: "{{nginx_unix_user_name}}"
+    group: "{{nginx_unix_group_name}}"
+    mode: "{{nginx_unix_mode_config_dir}}"
+  notify: "restart podman-nginx"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "podman-nginx.service.j2"
+    dest: "/lib/systemd/system/podman-nginx.service"
+  notify: "restart podman-nginx"
+
+- name: enable and start podman-nginx
+  ansible.builtin.systemd_service:
+    name: podman-nginx
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5
+
+
+- ansible.builtin.include_tasks: "_ssl.yaml"
+  tags: [nginx, ssl]
+- ansible.builtin.include_tasks: "_default.yaml"
+  tags: [nginx]
