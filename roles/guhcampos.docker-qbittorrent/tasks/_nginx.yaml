@@ -9,7 +9,7 @@
 
 - name: template nginx config
   ansible.builtin.template:
-    src: "docker-qbittorrent.nginx.subdomainradarr_docker_image_tag.conf.j2"
-    dest: "{{nginx_proxy_config_home}}/docker-qbittorrent.subdomainradarr_docker_image_tag.conf"
+    src: "docker-qbittorrent.nginx.subdomain.conf.j2"
+    dest: "{{nginx_proxy_config_home}}/docker-qbittorrent.subdomain.conf"
   notify: restart docker-nginx
   tags: [nginx]

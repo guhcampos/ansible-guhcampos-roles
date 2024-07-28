@@ -1,6 +1,6 @@
 ---
-- name: restart docker-nextcloud
+- name: restart cockpit
   ansible.builtin.systemd_service:
-    name: "docker-nextcloud"
+    name: "cockpit"
     daemon_reload: true
     state: restarted

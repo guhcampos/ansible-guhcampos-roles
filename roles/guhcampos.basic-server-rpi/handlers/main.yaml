@@ -1,0 +1,4 @@
+- name: restart-log2ram
+  systemd:
+    name: log2ram
+    state: restarted

@@ -1,6 +1,0 @@
----
-- name: restart docker-activepieces
-  ansible.builtin.systemd_service:
-    name: "docker-activepieces"
-    daemon_reload: true
-    state: restarted
