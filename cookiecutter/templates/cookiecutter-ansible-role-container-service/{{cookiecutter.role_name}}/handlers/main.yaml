@@ -1,0 +1,6 @@
+---
+- name: restart {{cookiecutter.service_full_name}}
+  ansible.builtin.systemd_service:
+    name: "{{cookiecutter.service_full_name}}"
+    daemon_reload: true
+    state: restarted

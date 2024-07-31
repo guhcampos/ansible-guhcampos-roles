@@ -1,0 +1,62 @@
+name: archivebox
+public: true
+template: cookiecutter-ansible-role-container-service
+context:
+  data_enabled: true
+  container_command: server --quick-init 0.0.0.0:{{ '{{archivebox_http_port}}' }}
+  container_repo: archivebox/archivebox
+  container_image_tag: latest
+  http_port: 4444
+  nginx_enabled: true
+  nginx_proxy_type: subdomain
+  nginx_ssl_enabled: true
+  container_env:
+    _1:
+      key: ALLOWED_HOSTS
+      value: localhost
+    _2:
+      key: CHECK_SSL_VALIDITY
+      value: False
+    _3:
+      key: MEDIA_MAX_SIZE
+      value: 750m
+    _4:
+      key: PUBLIC_ADD_VIEW
+      value: False
+    _5:
+      key: PUBLIC_INDEX
+      value: False
+    _6:
+      key: PUBLIC_SNAPSHOTS
+      value: False
+    _7:
+      key: SAVE_ARCHIVE_DOT_ORG
+      value: False
+    _8:
+      key: SAVE_PDF
+      value: False
+    _9:
+      key: SAVE_SINGLEFILE
+      value: False
+    _10:
+      key: SAVE_READABILITY
+      value: False
+    _11:
+      key: SAVE_MERCURY
+      value: False
+    _12:
+      key: SAVE_GIT
+      value: False
+    # _13:
+    #   key: CHROME_USER_DATA_DIR
+    #   value: chromium-profile
+
+  container_volumes:
+    _1:
+      src: "{{ '{{archivebox_config_home}}' }}"
+      dst: /config
+    _2:
+      src: "{{ '{{archivebox_data_home}}' }}"
+      dst: /data
+  unix_umask: "002"
+  unix_user_id: 4444

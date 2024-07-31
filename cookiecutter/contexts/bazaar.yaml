@@ -1,0 +1,22 @@
+---
+name: bazarr
+public: true
+template: cookiecutter-ansible-role-container-service
+context:
+  data_enabled: true
+  container_repo: ghcr.io/hotio/bazarr
+  container_src: https://hotio.dev/containers/bazarr/
+  container_image_tag: latest
+  http_port: 6767
+  nginx_enabled: true
+  nginx_proxy_type: subdomain
+  nginx_ssl_enabled: true
+  container_volumes:
+    _1:
+      src: "{{ '{{bazarr_config_home}}' }}"
+      dst: /config
+    _2:
+      src: "{{ '{{bazarr_data_home}}' }}"
+      dst: /data
+  unix_umask: "027"
+  unix_user_id: 6767

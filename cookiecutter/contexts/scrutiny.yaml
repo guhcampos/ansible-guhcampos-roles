@@ -1,0 +1,39 @@
+---
+
+name: scrutiny
+public: true
+template: cookiecutter-ansible-role-container-service
+context:
+  ansible_extra_tasks:
+    _1:
+      file: "_scrutiny.yaml"
+      tags: "[scrutiny]"
+  data_enabled: true
+  container_repo: ghcr.io/analogj/scrutiny
+  container_image_tag: master-omnibus
+  http_port: 2999
+  nginx_enabled: true
+  nginx_proxy_type: subdomain
+  nginx_ssl_enabled: true
+  container_capabilities:
+    _1: SYS_RAWIO
+    _2: SYS_ADMIN
+  container_env:
+    _1:
+        key: "COLLECTOR_RUN_STARTUP"
+        value: "true"
+    container_volumes:
+      _1:
+        src: "{{ '{{scrutiny_config_home}}' }}"
+        dst: /opt/scrutiny/config
+      _2:
+        src: "{{ '{{scrutiny_data_home}}' }}/influxdb"
+        dst: "/opt/scrutiny/influxdb"
+      _3:
+        src: "/run/udev"
+        dst: "/run/udev:ro"
+      _4:
+        src: "{{ '{{scrutiny_data_home}}' }}"
+        dst: /data
+    unix_umask: "002"
+    unix_user_id: 2999

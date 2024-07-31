@@ -1,0 +1,22 @@
+---
+
+name: mariadb
+public: true
+template: cookiecutter-ansible-role-container-service
+context:
+  data_enabled: true
+  container_repo: lscr.io/linuxserver/mariadb
+  container_image_tag: latest
+  nginx_enabled: false
+  container_volumes:
+    _1:
+      src: "{{ '{{mariadb_config_home}}' }}"
+      dst: /config
+    _2:
+      src: "{{ '{{mariadb_data_home}}' }}"
+      dst: /data
+  container_ports:
+    _1: 3306:3306/tcp
+  unix_umask: "002"
+  unix_user_id: 3306
+  unix_group_id: 3306

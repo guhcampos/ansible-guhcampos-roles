@@ -1,0 +1,22 @@
+---
+
+name: portainer
+public: true
+template: cookiecutter-ansible-role-container-service
+context:
+  data_enabled: true
+  container_repo: portainer/portainer-ce
+  container_image_tag: latest
+  http_port: 9443
+  container_volumes:
+    _1:
+      src: "{{ '{{portainer_config_home}}' }}"
+      dst: /config
+    _2:
+      src: "/var/run/container.sock"
+      dst: "/var/run/container.sock"
+  nginx_enabled: true
+  nginx_ssl_enabled: true
+  unix_umask: "002"
+  unix_user_id: 9443
+  unix_group_id: 9443

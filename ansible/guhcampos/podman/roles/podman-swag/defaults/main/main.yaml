@@ -1,0 +1,35 @@
+---
+swag_config_home: "{{swag_home}}/config"
+swag_container_cpu_limit: "1"
+swag_container_image: "{{swag_container_repo}}:{{swag_container_image_tag}}"
+swag_container_mem_limit: "1g"
+swag_container_network_name: "swag"
+swag_container_repo: "lscr.io/linuxserver/swag"
+swag_container_image_tag: "latest"
+swag_home: "/opt/podman-swag"
+swag_nginx_http_port: 80
+swag_nginx_https_port: 443
+
+swag_timezone: "Etc/UTC"
+swag_unix_group_id: "{{swag_unix_user_id}}"
+swag_unix_group_name: "{{swag_unix_user_name}}"
+swag_unix_user_id: 8080
+swag_unix_user_name: "swag"
+swag_unix_umask: "002"
+swag_unix_mode_config_dir: "0770"
+
+swag_container_devices: []
+
+# extra container variables to set
+swag_container_env: {}
+
+# network ports to expose
+swag_container_ports:
+  - "{{swag_nginx_http_port}}:{{swag_nginx_http_port}}"
+  - "{{swag_nginx_https_port}}:{{swag_nginx_https_port}}"
+
+# extra container volumes to mount
+swag_container_volumes:
+  - "{{nginx_config_home}}:/config"
+
+swag_container_volumes_extra: {}

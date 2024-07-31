@@ -1,0 +1,85 @@
+{
+    "author": "Gustavo Campos <guhcampos@gmail.com>",
+    "service_name": "__service__",
+    "role_namespace": "guhcampos",
+    "_jinja2_env_vars": {
+        "lstrip_blocks": true,
+        "trim_blocks": true
+    },
+    "ansible_extra_tasks": {
+        "_1": "",
+        "_2": "",
+        "_3": "",
+        "_4": "",
+        "_5": ""
+    },
+    "data_enabled": false,
+    "container_capabilities": {
+        "_1": "",
+        "_2": "",
+        "_3": "",
+        "_4": "",
+        "_5": ""
+    },
+    "container_command": "",
+    "container_cpu_limit": "1",
+    "container_devices": {
+        "_1": "",
+        "_2": "",
+        "_3": "",
+        "_4": "",
+        "_5": ""
+    },
+    "container_env": {
+        "_1": "",
+        "_2": "",
+        "_3": "",
+        "_4": "",
+        "_5": "",
+        "_6": "",
+        "_7": "",
+        "_8": "",
+        "_9": "",
+        "_10": "",
+        "_11": "",
+        "_12": "",
+        "_13": "",
+        "_14": "",
+        "_15": ""
+    },
+    "container_mem_limit": "1g",
+    "container_network_name": "{{cookiecutter.service_name}}",
+    "container_ports": {
+        "_1": "",
+        "_2": "",
+        "_3": "",
+        "_4": "",
+        "_5": ""
+    },
+    "container_runtime": "",
+    "container_repo": "container.io/busybox",
+    "container_image_tag": "latest",
+    "container_volumes": {
+        "_1": "",
+        "_2": "",
+        "_3": "",
+        "_4": "",
+        "_5": ""
+    },
+    "http_port": "0",
+    "https_port": "0",
+    "nginx_enabled": false,
+    "nginx_proxy_type": "subdomain",
+    "nginx_ssl_enabled": true,
+    "role_name": "{{cookiecutter.container_runtime}}-{{cookiecutter.service_name}}",
+    "role_full_name": "{{cookiecutter.role_namespace}}.{{cookiecutter.role_name}}",
+    "service_full_name": "{{cookiecutter.container_runtime}}-{{cookiecutter.service_name}}",
+    "service_home": "/opt/{{cookiecutter.service_full_name}}",
+    "timezone": "Etc/UTC",
+    "unix_group_id": "<GID>",
+    "unix_group_name": "{{cookiecutter.service_name}}",
+    "unix_umask": "027",
+    "unix_user_id": "<UID>",
+    "unix_user_name": "{{cookiecutter.service_name}}",
+    "unix_mode_config_dir": "0750"
+}

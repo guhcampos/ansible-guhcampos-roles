@@ -1,0 +1,22 @@
+---
+name: transmission
+public: true
+template: cookiecutter-ansible-role-container-service
+context:
+  data_enabled: true
+  container_repo: lscr.io/linuxserver/transmission
+  container_image_tag: latest
+  http_port: 9091
+  nginx_enabled: true
+  nginx_proxy_type: subdomain
+  nginx_ssl_enabled: true
+  container_volumes:
+    _1:
+      src: "{{ '{{transmission_config_home}}' }}"
+      dst: /config
+    _2:
+      src: "{{ '{{transmission_data_home}}' }}"
+      dst: /data
+  unix_umask: "002"
+  unix_user_id: 9091
+

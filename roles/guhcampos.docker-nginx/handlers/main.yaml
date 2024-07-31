@@ -1,6 +1,0 @@
----
-- name: restart docker-nginx
-  ansible.builtin.systemd_service:
-    name: "docker-nginx"
-    daemon_reload: true
-    state: restarted

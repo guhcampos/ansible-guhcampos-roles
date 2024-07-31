@@ -1,0 +1,26 @@
+---
+
+name: qbittorrent
+public: true
+template: cookiecutter-ansible-role-container-service
+context:
+  data_enabled: true
+  container_repo: ghcr.io/hotio/qbittorrent
+  container_image_tag: latest
+  http_port: 6880
+  nginx_enabled: true
+  nginx_proxy_type: subdomain
+  nginx_ssl_enabled: true
+  container_env:
+    _1:
+      key: WEBUI_PORTS
+      value: 6880/tcp
+  container_volumes:
+    _1:
+      src: "{{ '{{qbittorrent_config_home}}' }}"
+      dst: /config
+    _2:
+        src: "{{ '{{qbittorrent_data_home}}' }}"
+        dst: /data
+    unix_umask: "002"
+    unix_user_id: 6880

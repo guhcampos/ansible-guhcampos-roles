@@ -1,0 +1,22 @@
+---
+
+name: youtubedl
+public: true
+template: cookiecutter-ansible-role-container-service
+context:
+  data_enabled: true
+  container_repo: tzahi12345/youtubedl-material
+  container_image_tag: latest
+  http_port: 8998
+  nginx_enabled: true
+  nginx_proxy_type: subdomain
+  nginx_ssl_enabled: true
+  container_volumes:
+    _1:
+      src: "{{ '{{youtubedl_config_home}}' }}"
+      dst: /config
+    _2:
+      src: "{{ '{{youtubedl_data_home}}' }}"
+      dst: /data
+  unix_umask: "002"
+  unix_user_id: 8998

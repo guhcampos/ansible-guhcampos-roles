@@ -1,0 +1,14 @@
+---
+
+name: redis
+public: true
+template: cookiecutter-ansible-role-container-service
+context:
+  data_enabled: false
+  container_repo: redis/redis
+  container_image_tag: latest
+  container_ports:
+    _1: "6379:6379/tcp"
+  nginx_enabled: false
+  unix_umask: "002"
+  unix_user_id: "6379"

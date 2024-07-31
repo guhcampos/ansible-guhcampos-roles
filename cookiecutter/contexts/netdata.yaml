@@ -1,0 +1,54 @@
+---
+
+name: netdata
+public: true
+template: cookiecutter-ansible-role-container-service
+context:
+  data_enabled: true
+  container_network_name: host
+  container_repo: netdata/netdata
+  container_image_tag: latest
+  container_capabilities:
+    _1: NET_ADMIN
+    _2: SYS_ADMIN
+    _3: SYS_PTRACE
+  container_env:
+    _1:
+      key: NETDATA_EXTRA_APK_PACKAGES
+      value: "lm-sensors"
+
+  container_volumes:
+    _1:
+      src: /proc
+      dst: /host/proc:ro
+    _2:
+      src: /sys
+      dst: /host/sys:ro
+    _3:
+      src: /etc/os-release
+      dst: /host/etc/os-release:ro
+    _4:
+      src: /etc/passwd
+      dst: /host/etc/passwd:ro #pragma: allowlist secret
+    _5:
+      src: /etc/group
+      dst: /host/etc/group:ro
+    _6:
+      src: /var/run/container.sock
+      dst: /var/run/container.sock
+    _7:
+      src: "{{ '{{netdata_config_home}}' }}"
+      dst: /etc/netdata
+    _8:
+      src: "{{ '{{netdata_lib_home}}' }}"
+      dst: /var/libe/netdata
+    _9:
+      src: "{{ '{{netdata_cache_home}}' }}"
+      dst: "/var/cache/netdata"
+  http_port: 19999
+  https_enabled: false
+  nginx_enabled: true
+  nginx_proxy_type: subdomain
+  nginx_ssl_enabled: true
+  unix_umask: "002"
+  unix_user_id: 19999

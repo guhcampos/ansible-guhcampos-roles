@@ -1,0 +1,19 @@
+{%- macro var(name) -%}
+{{ '{{' }}{{ name }}{{ '}}' }}
+{%- endmacro -%}
+
+---
+- name: ensure proxy-config dir exists
+  file:
+    path: "{%raw%}{{nginx_proxy_config_home}}{%endraw%}"
+    owner: nginx
+    group: nginx
+    mode: "{{var('nginx_unix_mode_config_dir')}}"
+    state: directory
+
+- name: template nginx config
+  ansible.builtin.template:
+    src: "{{cookiecutter.service_full_name}}.nginx.{{cookiecutter.nginx_proxy_type}}.conf.j2"
+    dest: "{{ var('nginx_proxy_config_home') }}/{{cookiecutter.service_full_name}}.{{cookiecutter.nginx_proxy_type}}.conf"
+  notify: restart {{cookiecutter.container_runtime}}-nginx
+  tags: [nginx]

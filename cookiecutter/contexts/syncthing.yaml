@@ -1,0 +1,27 @@
+---
+
+name: syncthing
+public: true
+template: cookiecutter-ansible-role-container-service
+context:
+  data_enabled: true
+  container_repo: lscr.io/linuxserver/syncthing
+  container_image_tag: latest
+  http_port: 8384
+  nginx_enabled: true
+  nginx_proxy_type: subdomain
+  nginx_ssl_enabled: true
+  container_ports:
+    _1: 22000:22000/tcp
+    _2: 22000:22000/udp
+    _3: 21027:21027/udp
+  container_volumes:
+    _1:
+      src: "{{ '{{syncthing_config_home}}' }}"
+      dst: /config
+    _2:
+        src: "{{ '{{syncthing_data_home}}' }}"
+        dst: /data
+    unix_umask: "002"
+    unix_user_id: 8384
+    unix_mode_config_dir: 700

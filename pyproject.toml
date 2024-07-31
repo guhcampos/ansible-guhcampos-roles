@@ -1,0 +1,48 @@
+[tool.poetry]
+name = "ansible-guhcampos-collection"
+version = "0.1.0"
+description = ""
+authors = ["Gustavo Campos <guhcampos@gmail.com>"]
+readme = "README.md"
+packages = [{ include = "ansible_guhcampos_collection", from = "src" }]
+
+[tool.poetry.scripts]
+generate = 'ansible_guhcampos_collection.generate:main'
+
+[tool.poetry.dependencies]
+python = "^3.12"
+jinja2 = "3.1.2"
+markupsafe = "2.1.3"
+pyyaml = "6.0.1"
+pygments = "2.16.1"
+arrow = "1.3.0"
+binaryornot = "0.4.4"
+black = "23.10.0"
+certifi = "2023.7.22"
+chardet = "5.2.0"
+charset-normalizer = "3.3.0"
+click = "8.1.7"
+cookiecutter = "2.5.0"
+idna = "3.4"
+markdown-it-py = "3.0.0"
+mdurl = "0.1.2"
+mypy-extensions = "1.0.0"
+packaging = "23.2"
+pathspec = "0.11.2"
+platformdirs = "3.11.0"
+python-dateutil = "2.8.2"
+python-slugify = "8.0.1"
+requests = "2.31.0"
+rich = "13.6.0"
+ruff = "0.1.0"
+six = "1.16.0"
+text-unidecode = "1.3"
+types-python-dateutil = "2.8.19.14"
+urllib3 = "2.0.7"
+pydantic-settings = "^2.4.0"
+loguru = "^0.7.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,24 @@
+---
+
+name: rclone
+public: true
+template: cookiecutter-ansible-role-container-service
+context:
+  data_enabled: true
+  # container_command: : "mount media: /data/media --buffer-size 256M --dir-cache-time 1000h DEBUG --poll-interval 15s --timeout 1h -
+  container_command: rcd --rc-web-gui --rc-web-gui-no-open-browser --rc-web-gui-update --rc-addr :3333 --log-level DEBUG --rc-pass=potato --rc-user=tomato
+  container_repo: rclone/rclone
+  container_image_tag: latest
+  http_port: 3333
+  nginx_enabled: true
+  nginx_proxy_type: subdomain
+  nginx_ssl_enabled: true
+  container_volumes:
+    _1:
+      src: "{{ '{{rclone_config_home}}' }}"
+      dst: /config
+    _2:
+      src: "{{ '{{rclone_data_home}}' }}"
+      dst: /data
+    unix_umask: "002"
+    unix_user_id: 3333

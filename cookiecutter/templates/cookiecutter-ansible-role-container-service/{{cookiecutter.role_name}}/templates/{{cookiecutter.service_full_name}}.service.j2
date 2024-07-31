@@ -1,0 +1,15 @@
+[Unit]
+Description={{cookiecutter.container_runtime}} {{cookiecutter.service_name}}
+After={{cookiecutter.container_runtime}}.service
+Requires={{cookiecutter.container_runtime}}.service
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+RemainAfterExit=true
+WorkingDirectory={% raw %}{{{%endraw%}{{cookiecutter.service_name}}_home{% raw %}}}{%endraw+%}
+ExecStart=/usr/bin/{{cookiecutter.container_runtime}}-compose up -d --remove-orphans
+ExecStop=/usr/bin/{{cookiecutter.container_runtime}}-compose down
+
+

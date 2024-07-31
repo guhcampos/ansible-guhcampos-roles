@@ -1,0 +1,38 @@
+---
+rclone_config_home: "{{rclone_home}}/config"
+rclone_data_home: "{{rclone_home}}/data"
+rclone_container_command: "rcd --rc-web-gui --rc-web-gui-no-open-browser --rc-web-gui-update --rc-addr :3333 --log-level DEBUG --rc-pass=potato --rc-user=tomato"
+rclone_container_cpu_limit: "1"
+rclone_container_image: "{{rclone_container_repo}}:{{rclone_container_image_tag}}"
+rclone_container_mem_limit: "1g"
+rclone_container_network_name: "rclone"
+rclone_container_repo: "rclone/rclone"
+rclone_container_image_tag: "latest"
+rclone_home: "/opt/docker-rclone"
+rclone_nginx_http_port: 3333
+rclone_nginx_https_port: 0
+rclone_nginx_server_name: "rclone.*"
+
+rclone_timezone: "Etc/UTC"
+rclone_unix_group_id: "{{rclone_unix_user_id}}"
+rclone_unix_group_name: "{{rclone_unix_user_name}}"
+rclone_unix_user_id: <UID>
+rclone_unix_user_name: "rclone"
+rclone_unix_umask: "027"
+rclone_unix_mode_config_dir: "0750"
+
+rclone_container_devices: []
+
+# extra container variables to set
+rclone_container_env: {}
+
+# network ports to expose
+rclone_container_ports:
+  - "{{rclone_nginx_http_port}}:{{rclone_nginx_http_port}}"
+
+# extra container volumes to mount
+rclone_container_volumes:
+  - "{{rclone_config_home}}:/config"
+  - "{{rclone_data_home}}:/data"
+
+rclone_container_volumes_extra: {}
