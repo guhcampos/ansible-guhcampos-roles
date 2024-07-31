@@ -62,4 +62,3 @@
 
 - ansible.builtin.include_tasks: "_nginx.yaml"
   tags: [nginx]
-

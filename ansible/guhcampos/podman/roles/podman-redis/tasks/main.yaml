@@ -59,5 +59,3 @@
     state: started
   async: 60
   poll: 5
-
-
