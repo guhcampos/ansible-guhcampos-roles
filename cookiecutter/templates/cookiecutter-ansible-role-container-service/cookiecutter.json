@@ -71,7 +71,7 @@
     "nginx_enabled": false,
     "nginx_proxy_type": "subdomain",
     "nginx_ssl_enabled": true,
-    "role_name": "{{cookiecutter.container_runtime}}-{{cookiecutter.service_name}}",
+    "role_name": "{{cookiecutter.service_name}}",
     "role_full_name": "{{cookiecutter.role_namespace}}.{{cookiecutter.role_name}}",
     "service_full_name": "{{cookiecutter.container_runtime}}-{{cookiecutter.service_name}}",
     "service_home": "/opt/{{cookiecutter.service_full_name}}",
