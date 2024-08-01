@@ -1,0 +1,32 @@
+{%- macro var(name) -%}
+{{ '{{' }}{{ name }}{{ '}}' }}
+{%- endmacro -%}
+
+server {
+    include /config/nginx/ssl.conf;
+
+    server_name {{ var(cookiecutter.service_name+"_nginx_server_name")}};
+
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    client_max_body_size 0;
+    error_log /dev/stdout info;
+
+    location / {
+        include /config/nginx/proxy.conf;
+        include /config/nginx/resolver.conf;
+        set $upstream_app {{cookiecutter.service_name}};
+        set $upstream_port {{ var(cookiecutter.service_name+"_nginx_http_port")}};
+        set $upstream_proto http;
+        proxy_pass $upstream_proto://$upstream_app:$upstream_port;
+    }
+
+    location ~ (/{{cookiecutter.service_name}})?/api {
+        include /config/nginx/proxy.conf;
+        include /config/nginx/resolver.conf;
+        set $upstream_app {{cookiecutter.service_name}};
+        set $upstream_port {{ var(cookiecutter.service_name+"_nginx_http_port")}};
+        set $upstream_proto http;
+        proxy_pass $upstream_proto://$upstream_app:$upstream_port;
+    }
+}

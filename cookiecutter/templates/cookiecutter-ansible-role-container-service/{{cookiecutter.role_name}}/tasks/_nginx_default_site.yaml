@@ -1,0 +1,22 @@
+- name: ensure site-config dir exists
+  file:
+    path: "{%raw%}{{nginx_site_config_home}}{%endraw+%}"
+    owner: nginx
+    group: nginx
+    mode: 0750
+    state: directory
+
+- name: ensure proxy-config dir exists
+  file:
+    path: "{%raw%}{{nginx_proxy_config_home}}{%endraw+%}"
+    owner: nginx
+    group: nginx
+    mode: 0750
+    state: directory
+
+- name: replace default.conf with our version
+  ansible.builtin.template:
+    src: "default.conf.j2"
+    dest: "{%raw%}{{nginx_site_config_home}}{%endraw%}/default.conf"
+  notify: restart {{cookiecutter.container_runtime}}-nginx
+  tags: [nginx]

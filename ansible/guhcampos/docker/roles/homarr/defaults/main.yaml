@@ -1,0 +1,33 @@
+---
+homarr_config_home: "{{homarr_home}}/config"
+homarr_container_cpu_limit: "1"
+homarr_container_image: "{{homarr_container_repo}}:{{homarr_container_image_tag}}"
+homarr_container_mem_limit: "1g"
+homarr_container_network_name: "homarr"
+homarr_container_repo: "ghcr.io/ajnart/homarr"
+homarr_container_image_tag: "latest"
+homarr_home: "/opt/docker-homarr"
+homarr_nginx_http_port: 7575
+homarr_nginx_https_port: 0
+
+homarr_timezone: "Etc/UTC"
+homarr_unix_group_id: "{{homarr_unix_user_id}}"
+homarr_unix_group_name: "{{homarr_unix_user_name}}"
+homarr_unix_user_id: 7575
+homarr_unix_user_name: "homarr"
+homarr_unix_umask: "002"
+homarr_unix_mode_config_dir: "0770"
+
+homarr_container_devices: []
+
+# extra container variables to set
+homarr_container_env: {}
+
+# network ports to expose
+homarr_container_ports:
+  - "{{homarr_nginx_http_port}}:{{homarr_nginx_http_port}}"
+
+# extra container volumes to mount
+homarr_container_volumes:
+ {}
+homarr_container_volumes_extra: {}

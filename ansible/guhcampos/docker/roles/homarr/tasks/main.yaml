@@ -1,0 +1,61 @@
+---
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{homarr_unix_group_name}}"
+    gid: "{{homarr_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{homarr_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart docker-homarr"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{homarr_unix_user_name}}"
+    state: present
+    uid: "{{homarr_unix_user_id}}"
+    group:  "{{homarr_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{homarr_home}}"
+    create_home: false
+
+- name: template docker-compose
+  ansible.builtin.template:
+    src: "docker-compose.yaml.j2"
+    dest: "{{homarr_home}}/docker-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart docker-homarr"
+  tags: [docker-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{homarr_config_home}}"
+    owner: "{{homarr_unix_user_name}}"
+    group: "{{homarr_unix_group_name}}"
+    mode: "{{homarr_unix_mode_config_dir}}"
+  notify: "restart docker-homarr"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "docker-homarr.service.j2"
+    dest: "/lib/systemd/system/docker-homarr.service"
+  notify: "restart docker-homarr"
+
+- name: enable and start docker-homarr
+  ansible.builtin.systemd_service:
+    name: docker-homarr
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5

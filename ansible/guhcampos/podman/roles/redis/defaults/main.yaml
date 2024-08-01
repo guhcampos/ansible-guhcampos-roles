@@ -1,0 +1,33 @@
+---
+redis_config_home: "{{redis_home}}/config"
+redis_container_cpu_limit: "1"
+redis_container_image: "{{redis_container_repo}}:{{redis_container_image_tag}}"
+redis_container_mem_limit: "1g"
+redis_container_network_name: "redis"
+redis_container_repo: "redis/redis"
+redis_container_image_tag: "latest"
+redis_home: "/opt/podman-redis"
+redis_nginx_http_port: 0
+redis_nginx_https_port: 0
+
+redis_timezone: "Etc/UTC"
+redis_unix_group_id: "{{redis_unix_user_id}}"
+redis_unix_group_name: "{{redis_unix_user_name}}"
+redis_unix_user_id: 6379
+redis_unix_user_name: "redis"
+redis_unix_umask: "002"
+redis_unix_mode_config_dir: "0770"
+
+redis_container_devices: []
+
+# extra container variables to set
+redis_container_env: {}
+
+# network ports to expose
+redis_container_ports:
+  - "6379:6379/tcp"
+
+# extra container volumes to mount
+redis_container_volumes:
+ {}
+redis_container_volumes_extra: {}

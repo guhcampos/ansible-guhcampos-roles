@@ -1,7 +1,7 @@
 ---
 {% if cookiecutter.nginx_enabled %}
 dependencies:
-  - role: guhcampos.{{cookiecutter.container_runtime}}-nginx
+  - role: guhcampos.{{cookiecutter.container_runtime}}.nginx
     tags: [nginx]
 {% else -%}
 dependencies: []

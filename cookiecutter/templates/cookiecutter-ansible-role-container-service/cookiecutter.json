@@ -78,8 +78,8 @@
     "timezone": "Etc/UTC",
     "unix_group_id": "<GID>",
     "unix_group_name": "{{cookiecutter.service_name}}",
-    "unix_umask": "027",
+    "unix_umask": "022",
     "unix_user_id": "<UID>",
     "unix_user_name": "{{cookiecutter.service_name}}",
-    "unix_mode_config_dir": "0750"
+    "unix_mode_config_dir": "0770"
 }

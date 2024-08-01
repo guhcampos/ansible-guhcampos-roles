@@ -1,0 +1,61 @@
+---
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{homarr_unix_group_name}}"
+    gid: "{{homarr_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{homarr_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart podman-homarr"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{homarr_unix_user_name}}"
+    state: present
+    uid: "{{homarr_unix_user_id}}"
+    group:  "{{homarr_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{homarr_home}}"
+    create_home: false
+
+- name: template podman-compose
+  ansible.builtin.template:
+    src: "podman-compose.yaml.j2"
+    dest: "{{homarr_home}}/podman-compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart podman-homarr"
+  tags: [podman-compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{homarr_config_home}}"
+    owner: "{{homarr_unix_user_name}}"
+    group: "{{homarr_unix_group_name}}"
+    mode: "{{homarr_unix_mode_config_dir}}"
+  notify: "restart podman-homarr"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "podman-homarr.service.j2"
+    dest: "/lib/systemd/system/podman-homarr.service"
+  notify: "restart podman-homarr"
+
+- name: enable and start podman-homarr
+  ansible.builtin.systemd_service:
+    name: podman-homarr
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5

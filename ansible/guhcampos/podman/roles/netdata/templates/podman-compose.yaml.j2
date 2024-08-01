@@ -13,7 +13,7 @@ services:
       - TZ={{netdata_timezone}}
       {% for key,value in netdata_container_env.items() -%}
       - {{key}}={{value}}
-      {% endfor +%}
+      {% endfor %}
 
 
     volumes:
@@ -24,14 +24,16 @@ services:
       {% endif %}
       {%- endfor %}
       {% for volume in netdata_container_volumes_extra -%}
+
       {% if volume != "" -%}
       - "{{volume.src}}:{{volume.dst}}"
       {% endif -%}
-      {%- endfor +%}
+      {%- endfor %}
 
     cap_add:
       - NET_ADMIN
       - SYS_ADMIN
       - SYS_PTRACE
+
 
     network_mode: "host"

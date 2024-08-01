@@ -1,0 +1,13 @@
+[Unit]
+Description=podman homarr
+After=podman.service
+Requires=podman.service
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+RemainAfterExit=true
+WorkingDirectory={{homarr_home}}
+ExecStart=/usr/bin/podman-compose up -d --remove-orphans
+ExecStop=/usr/bin/podman-compose down

@@ -1,0 +1,39 @@
+---
+nginx_config_home: "{{nginx_home}}/config"
+nginx_container_cpu_limit: "1"
+nginx_container_image: "{{nginx_container_repo}}:{{nginx_container_image_tag}}"
+nginx_container_mem_limit: "1g"
+nginx_container_network_name: "nginx"
+nginx_container_repo: "lscr.io/linuxserver/swag"
+nginx_container_image_tag: "latest"
+nginx_home: "/opt/docker-nginx"
+nginx_nginx_http_port: 80
+nginx_nginx_https_port: 443
+
+nginx_timezone: "Etc/UTC"
+nginx_unix_group_id: "{{nginx_unix_user_id}}"
+nginx_unix_group_name: "{{nginx_unix_user_name}}"
+nginx_unix_user_id: 8080
+nginx_unix_user_name: "nginx"
+nginx_unix_umask: "002"
+nginx_unix_mode_config_dir: "0770"
+
+nginx_container_devices: []
+
+# extra container variables to set
+nginx_container_env: {}
+
+# network ports to expose
+nginx_container_ports:
+  - "{{nginx_nginx_http_port}}:{{nginx_nginx_http_port}}"
+  - "{{nginx_nginx_https_port}}:{{nginx_nginx_https_port}}"
+
+# extra container volumes to mount
+nginx_container_volumes:
+  - "{{nginx_config_home}}:/config"
+
+nginx_container_volumes_extra: {}
+
+nginx_dns_config_home: "{{nginx_config_home}}/dns-conf"
+nginx_proxy_config_home: "{{nginx_config_home}}/nginx/proxy-confs"
+nginx_site_config_home: "{{nginx_config_home}}/nginx/site-confs"

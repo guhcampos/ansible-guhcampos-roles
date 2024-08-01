@@ -1,6 +1,0 @@
----
-- name: restart docker-swag
-  ansible.builtin.systemd_service:
-    name: "docker-swag"
-    daemon_reload: true
-    state: restarted

@@ -1,0 +1,31 @@
+---
+
+name: nginx
+public: true
+template: cookiecutter-ansible-role-container-service
+context:
+  extra_template_files:
+    _1: extras/nginx/tasks/_default.yaml
+    _2: extras/nginx/tasks/_ssl.yaml
+  container_repo: lscr.io/linuxserver/swag
+  container_image_tag: latest
+  http_port: 80
+  https_port: 443
+  container_capabilities:
+    _1: NET_ADMIN
+  container_volumes:
+    _1:
+      src: "{{ '{{nginx_config_home}}' }}"
+      dst: /config
+  ansible_extra_tasks:
+    _1:
+      file: _nginx_ssl.yaml
+      tags: "[nginx, ssl]"
+    _2:
+      file: _nginx_default_site.yaml
+      tags: "[nginx]"
+  nginx_enabled: false
+  nginx_ssl_enabled: false
+  unix_umask: "002"
+  unix_user_id: 8080
+  unix_mode_config_dir: "0770"

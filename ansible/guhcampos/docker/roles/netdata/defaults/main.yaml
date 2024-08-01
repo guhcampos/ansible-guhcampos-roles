@@ -1,0 +1,41 @@
+---
+netdata_config_home: "{{netdata_home}}/config"
+netdata_data_home: "{{netdata_home}}/data"
+netdata_container_cpu_limit: "1"
+netdata_container_image: "{{netdata_container_repo}}:{{netdata_container_image_tag}}"
+netdata_container_mem_limit: "1g"
+netdata_container_network_name: "host"
+netdata_container_repo: "netdata/netdata"
+netdata_container_image_tag: "latest"
+netdata_home: "/opt/docker-netdata"
+netdata_nginx_http_port: 19999
+netdata_nginx_https_port: 0
+netdata_nginx_server_name: "netdata.*"
+
+netdata_timezone: "Etc/UTC"
+netdata_unix_group_id: "{{netdata_unix_user_id}}"
+netdata_unix_group_name: "{{netdata_unix_user_name}}"
+netdata_unix_user_id: 19999
+netdata_unix_user_name: "netdata"
+netdata_unix_umask: "002"
+netdata_unix_mode_config_dir: "0770"
+
+netdata_container_devices: []
+
+# extra container variables to set
+netdata_container_env:
+  NETDATA_EXTRA_APK_PACKAGES: "lm-sensors"
+
+# network ports to expose
+netdata_container_ports:
+  - "{{netdata_nginx_http_port}}:{{netdata_nginx_http_port}}"
+
+# extra container volumes to mount
+netdata_container_volumes:
+  - "/proc:/host/proc:ro"
+  - "/sys:/host/sys:ro"
+  - "/etc/os-release:/host/etc/os-release:ro"
+  - "/etc/passwd:/host/etc/passwd:ro"
+  - "/etc/group:/host/etc/group:ro"
+
+netdata_container_volumes_extra: {}

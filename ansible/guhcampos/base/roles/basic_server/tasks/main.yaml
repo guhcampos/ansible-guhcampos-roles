@@ -1,0 +1,3 @@
+- name: define the machine hostname
+  ansible.builtin.hostname:
+    name: "{{inventory_hostname}}"

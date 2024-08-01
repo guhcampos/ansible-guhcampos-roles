@@ -1,0 +1,37 @@
+---
+bazarr_config_home: "{{bazarr_home}}/config"
+bazarr_data_home: "{{bazarr_home}}/data"
+bazarr_container_cpu_limit: "1"
+bazarr_container_image: "{{bazarr_container_repo}}:{{bazarr_container_image_tag}}"
+bazarr_container_mem_limit: "1g"
+bazarr_container_network_name: "bazarr"
+bazarr_container_repo: "ghcr.io/hotio/bazarr"
+bazarr_container_image_tag: "latest"
+bazarr_home: "/opt/docker-bazarr"
+bazarr_nginx_http_port: 6767
+bazarr_nginx_https_port: 0
+bazarr_nginx_server_name: "bazarr.*"
+
+bazarr_timezone: "Etc/UTC"
+bazarr_unix_group_id: "{{bazarr_unix_user_id}}"
+bazarr_unix_group_name: "{{bazarr_unix_user_name}}"
+bazarr_unix_user_id: 6767
+bazarr_unix_user_name: "bazarr"
+bazarr_unix_umask: "027"
+bazarr_unix_mode_config_dir: "0770"
+
+bazarr_container_devices: []
+
+# extra container variables to set
+bazarr_container_env: {}
+
+# network ports to expose
+bazarr_container_ports:
+  - "{{bazarr_nginx_http_port}}:{{bazarr_nginx_http_port}}"
+
+# extra container volumes to mount
+bazarr_container_volumes:
+  - "{{bazarr_config_home}}:/config"
+  - "{{bazarr_data_home}}:/data"
+
+bazarr_container_volumes_extra: {}

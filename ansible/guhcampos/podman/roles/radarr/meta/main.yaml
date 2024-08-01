@@ -1,4 +1,4 @@
 ---
 dependencies:
-  - role: guhcampos.podman-nginx
+  - role: guhcampos.podman.nginx
     tags: [nginx]

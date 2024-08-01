@@ -1,0 +1,6 @@
+---
+- name: restart docker-homarr
+  ansible.builtin.systemd_service:
+    name: "docker-homarr"
+    daemon_reload: true
+    state: restarted

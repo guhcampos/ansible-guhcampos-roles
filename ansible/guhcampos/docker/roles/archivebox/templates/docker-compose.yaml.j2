@@ -13,14 +13,14 @@ services:
       - TZ={{archivebox_timezone}}
       {% for key,value in archivebox_container_env.items() -%}
       - {{key}}={{value}}
-      {% endfor +%}
+      {% endfor %}
 
     ports:
       {% for port in archivebox_container_ports -%}
       {% if port != "" -%}
       - {{port}}
       {% endif -%}
-      {%- endfor +%}
+      {%- endfor %}
 
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
@@ -30,13 +30,15 @@ services:
       {% endif %}
       {%- endfor %}
       {% for volume in archivebox_container_volumes_extra -%}
+
       {% if volume != "" -%}
       - "{{volume.src}}:{{volume.dst}}"
       {% endif -%}
-      {%- endfor +%}
+      {%- endfor %}
 
     cap_add: []
+
 networks:
   default:
-    name: "{{archivebox_{{cookiecutter.container_runtime}}_network_name}}"
+    name: "{{archivebox_container_network_name}}"
     external: true

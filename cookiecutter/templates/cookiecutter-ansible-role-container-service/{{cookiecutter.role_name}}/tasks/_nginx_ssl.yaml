@@ -1,0 +1,16 @@
+- name: ensure dns-config dir exists
+  file:
+    path: "{%raw%}{{nginx_dns_config_home}}{%endraw+%}"
+    owner: nginx
+    group: nginx
+    mode: 0440
+    state: directory
+
+- name: template dns-config
+  ansible.builtin.template:
+    src: cloudflare.ini.j2
+    dest: "{%raw%}{{nginx_dns_config_home}}{%endraw%}/cloudflare.ini"
+    mode: 0440
+    owner: nginx
+    group: nginx
+  notify: restart {{cookiecutter.container_runtime}}-nginx

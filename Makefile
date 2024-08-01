@@ -10,7 +10,7 @@ $(PYTHON):
 	poetry install
 
 clean:
-	rm -rf ansible/guhcampos/docker/*
-	rm -rf ansible/guhcampos/podman/*
+	rm -rf ansible/guhcampos/docker/roles/*
+	rm -rf ansible/guhcampos/podman/roles/*
 
 .DEFAULT_GOAL := generate

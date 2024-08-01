@@ -1,0 +1,7 @@
+- block:
+  - name: include log2ram tasks
+    ansible.builtin.include_tasks:
+      file: tasks/tasks.log2ram.yaml
+  tags:
+    - log2ram
+    - logging

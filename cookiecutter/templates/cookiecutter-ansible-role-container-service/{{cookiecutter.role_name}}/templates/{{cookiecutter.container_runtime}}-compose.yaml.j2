@@ -29,7 +29,7 @@ services:
       {%+raw%}{% for key,value in {%endraw%}{{cookiecutter.service_name}}_container_env.items(){%raw%} -%}{%endraw%}
       {%raw%}
       - {{key}}={{value}}
-      {% endfor +%}
+      {% endfor %}
       {%endraw%}
 
     {% if cookiecutter.container_network_name != "host" %}
@@ -39,7 +39,7 @@ services:
       {% if port != "" -%}
       - {{port}}
       {% endif -%}
-      {%- endfor +%}
+      {%- endfor %}
       {%endraw%}
     {% endif %}
 
@@ -52,12 +52,12 @@ services:
       {% endif %}
       {%- endfor %}
       {%endraw%}
-      {%+raw%}{% for volume in {%endraw%}{{cookiecutter.service_name}}_container_volumes_extra{%raw%} -%}{%endraw%}
+      {%+raw%}{% for volume in {%endraw%}{{cookiecutter.service_name}}_container_volumes_extra{%raw%} -%}{%endraw+%}
       {%raw%}
       {% if volume != "" -%}
       - "{{volume.src}}:{{volume.dst}}"
       {% endif -%}
-      {%- endfor +%}
+      {%- endfor %}
       {%endraw%}
 
     cap_add:
@@ -68,7 +68,7 @@ services:
       {%- endif -%}
       {%- endfor %}
       {% else %} []{# the space before [] is important #}
-      {% endif -%}
+      {% endif %}
 
 {% if cookiecutter.container_network_name == "host" %}
     network_mode: "host"
@@ -76,6 +76,6 @@ services:
 
 networks:
   default:
-    name: "{{ var(cookiecutter.service_name+"_{{cookiecutter.container_runtime}}_network_name") }}"
+    name: "{{ var(cookiecutter.service_name+"_container_network_name") }}"
     external: true
 {% endif %}

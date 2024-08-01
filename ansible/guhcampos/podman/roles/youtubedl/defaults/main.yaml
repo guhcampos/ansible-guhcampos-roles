@@ -1,0 +1,37 @@
+---
+youtubedl_config_home: "{{youtubedl_home}}/config"
+youtubedl_data_home: "{{youtubedl_home}}/data"
+youtubedl_container_cpu_limit: "1"
+youtubedl_container_image: "{{youtubedl_container_repo}}:{{youtubedl_container_image_tag}}"
+youtubedl_container_mem_limit: "1g"
+youtubedl_container_network_name: "youtubedl"
+youtubedl_container_repo: "tzahi12345/youtubedl-material"
+youtubedl_container_image_tag: "latest"
+youtubedl_home: "/opt/podman-youtubedl"
+youtubedl_nginx_http_port: 8998
+youtubedl_nginx_https_port: 0
+youtubedl_nginx_server_name: "youtubedl.*"
+
+youtubedl_timezone: "Etc/UTC"
+youtubedl_unix_group_id: "{{youtubedl_unix_user_id}}"
+youtubedl_unix_group_name: "{{youtubedl_unix_user_name}}"
+youtubedl_unix_user_id: 8998
+youtubedl_unix_user_name: "youtubedl"
+youtubedl_unix_umask: "002"
+youtubedl_unix_mode_config_dir: "0770"
+
+youtubedl_container_devices: []
+
+# extra container variables to set
+youtubedl_container_env: {}
+
+# network ports to expose
+youtubedl_container_ports:
+  - "{{youtubedl_nginx_http_port}}:{{youtubedl_nginx_http_port}}"
+
+# extra container volumes to mount
+youtubedl_container_volumes:
+  - "{{youtubedl_config_home}}:/config"
+  - "{{youtubedl_data_home}}:/data"
+
+youtubedl_container_volumes_extra: {}

@@ -1,4 +1,4 @@
 ---
 dependencies:
-  - role: guhcampos.docker-nginx
+  - role: guhcampos.docker.nginx
     tags: [nginx]
