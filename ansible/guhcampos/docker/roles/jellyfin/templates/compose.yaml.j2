@@ -1,0 +1,43 @@
+---
+services:
+  jellyfin:
+    container_name: "jellyfin"
+    image: "{{jellyfin_container_image}}"
+    restart: unless-stopped
+    devices: []
+    environment:
+      - PUID={{jellyfin_unix_user_id}}
+      - PGID={{jellyfin_unix_group_id}}
+      - UMASK={{jellyfin_unix_umask}}
+      - TZ={{jellyfin_timezone}}
+      {% for key,value in jellyfin_container_env.items() -%}
+      - {{key}}={{value}}
+      {% endfor %}
+
+    ports:
+      {% for port in jellyfin_container_ports -%}
+      {% if port != "" -%}
+      - {{port}}
+      {% endif -%}
+      {%- endfor %}
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      {% for volume in jellyfin_container_volumes -%}
+      {% if volume != "" -%}
+      - "{{volume}}"
+      {% endif %}
+      {%- endfor %}
+      {% for volume in jellyfin_container_volumes_extra -%}
+
+      {% if volume != "" -%}
+      - "{{volume.src}}:{{volume.dst}}"
+      {% endif -%}
+      {%- endfor %}
+
+    cap_add: []
+
+networks:
+  default:
+    name: "{{jellyfin_container_network_name}}"
+    external: true

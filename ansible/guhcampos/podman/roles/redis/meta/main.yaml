@@ -1,2 +1,4 @@
 ---
-dependencies: []
+dependencies:
+  - role: guhcampos.base.server_podman
+    tags: [nginx]

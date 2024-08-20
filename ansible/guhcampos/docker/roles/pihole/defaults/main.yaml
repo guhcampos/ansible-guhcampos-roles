@@ -1,0 +1,40 @@
+---
+pihole_config_home: "{{pihole_home}}/config"
+pihole_data_home: "{{pihole_home}}/data"
+pihole_container_cpu_limit: "1"
+pihole_container_image: "{{pihole_container_repo}}:{{pihole_container_image_tag}}"
+pihole_container_mem_limit: "1g"
+pihole_container_network_name: "pihole"
+pihole_container_repo: "pihole/pihole"
+pihole_container_image_tag: "latest"
+pihole_home: "/opt/docker-pihole"
+pihole_nginx_http_port: 5353
+pihole_nginx_https_port: 0
+pihole_nginx_server_name: "pihole.*"
+
+pihole_timezone: "Etc/UTC"
+pihole_unix_group_id: "{{pihole_unix_user_id}}"
+pihole_unix_group_name: "{{pihole_unix_user_name}}"
+pihole_unix_user_id: 5353
+pihole_unix_user_name: "pihole"
+pihole_unix_umask: "002"
+pihole_unix_mode_config_dir: "0770"
+
+pihole_container_devices: []
+
+# extra container variables to set
+pihole_container_env: {}
+
+# network ports to expose
+pihole_container_ports:
+  - "{{pihole_nginx_http_port}}:{{pihole_nginx_http_port}}"
+  - "53:53"
+  - "67:67"
+  - "5353:80"
+
+# extra container volumes to mount
+pihole_container_volumes:
+  - "{{pihole_config_home}}:/config"
+  - "{{pihole_dnsmasq_home}}:/data"
+
+pihole_container_volumes_extra: {}

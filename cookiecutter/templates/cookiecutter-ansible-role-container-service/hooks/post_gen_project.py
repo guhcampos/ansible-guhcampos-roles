@@ -13,7 +13,7 @@ def cleanup_extra_files():
     if role != "nginx":
         (Path(".") / Path("tasks/_nginx_default_site.yaml")).unlink()
         (Path(".") / Path("tasks/_nginx_ssl.yaml")).unlink()
-        (Path(".") / Path("templates/cloudflare.init.j2")).unlink()
+        (Path(".") / Path("templates/cloudflare.ini.j2")).unlink()
         (Path(".") / Path("templates/default.conf.j2")).unlink()
 
 

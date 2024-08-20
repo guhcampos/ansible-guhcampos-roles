@@ -15,9 +15,9 @@ qbittorrent_nginx_server_name: "qbittorrent.*"
 qbittorrent_timezone: "Etc/UTC"
 qbittorrent_unix_group_id: "{{qbittorrent_unix_user_id}}"
 qbittorrent_unix_group_name: "{{qbittorrent_unix_user_name}}"
-qbittorrent_unix_user_id: <UID>
+qbittorrent_unix_user_id: 6880
 qbittorrent_unix_user_name: "qbittorrent"
-qbittorrent_unix_umask: "022"
+qbittorrent_unix_umask: "002"
 qbittorrent_unix_mode_config_dir: "0770"
 
 qbittorrent_container_devices: []

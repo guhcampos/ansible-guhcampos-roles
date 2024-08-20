@@ -29,15 +29,15 @@
     home: "{{ var(cookiecutter.service_name+'_home') }}"
     create_home: false
 
-- name: template {{cookiecutter.container_runtime}}-compose
+- name: template compose file
   ansible.builtin.template:
-    src: "{{cookiecutter.container_runtime}}-compose.yaml.j2"
-    dest: "{{ var(cookiecutter.service_name+'_home') }}/{{cookiecutter.container_runtime}}-compose.yaml"
+    src: "compose.yaml.j2"
+    dest: "{{ var(cookiecutter.service_name+'_home') }}/compose.yaml"
     owner: root
     group: adm
     mode: 0640
   notify: "restart {{cookiecutter.service_full_name}}"
-  tags: [{{cookiecutter.container_runtime}}-compose]
+  tags: [compose]
 
 - name: "create config dir"
   ansible.builtin.file:

@@ -1,0 +1,64 @@
+---
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{prefect_unix_group_name}}"
+    gid: "{{prefect_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{prefect_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart podman-prefect"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{prefect_unix_user_name}}"
+    state: present
+    uid: "{{prefect_unix_user_id}}"
+    group:  "{{prefect_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{prefect_home}}"
+    create_home: false
+
+- name: template compose file
+  ansible.builtin.template:
+    src: "compose.yaml.j2"
+    dest: "{{prefect_home}}/compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart podman-prefect"
+  tags: [compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{prefect_config_home}}"
+    owner: "{{prefect_unix_user_name}}"
+    group: "{{prefect_unix_group_name}}"
+    mode: "{{prefect_unix_mode_config_dir}}"
+  notify: "restart podman-prefect"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "podman-prefect.service.j2"
+    dest: "/lib/systemd/system/podman-prefect.service"
+  notify: "restart podman-prefect"
+
+- name: enable and start podman-prefect
+  ansible.builtin.systemd_service:
+    name: podman-prefect
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5
+
+- ansible.builtin.include_tasks: "_nginx.yaml"
+  tags: [nginx]

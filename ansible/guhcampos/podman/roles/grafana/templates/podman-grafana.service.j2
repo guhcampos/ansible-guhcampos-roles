@@ -9,5 +9,5 @@ WantedBy=multi-user.target
 [Service]
 RemainAfterExit=true
 WorkingDirectory={{grafana_home}}
-ExecStart=/usr/bin/podman-compose up -d --remove-orphans
-ExecStop=/usr/bin/podman-compose down
+ExecStart=/usr/bin/podman compose up --remove-orphans
+ExecStop=/usr/bin/podman compose down

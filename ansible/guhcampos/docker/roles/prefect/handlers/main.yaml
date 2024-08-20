@@ -1,0 +1,6 @@
+---
+- name: restart docker-prefect
+  ansible.builtin.systemd_service:
+    name: "docker-prefect"
+    daemon_reload: true
+    state: restarted

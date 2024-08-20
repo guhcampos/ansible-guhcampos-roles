@@ -1,0 +1,53 @@
+- debug:
+    msg: >
+      ----------––––––--------------------––––––--------------------––––––--------
+      WARNING: NOT IMPLEMENTED
+      ----------––––––--------------------––––––--------------------––––––--------
+      I was lazy and just manualy followed: https://docs.docker.com/engine/install/debian/
+      ```
+      # Add Docker's official GPG key:
+      sudo apt-get update
+      sudo apt-get install ca-certificates curl
+      sudo install -m 0755 -d /etc/apt/keyrings
+      sudo curl -fsSL https://download.docker.com/linux/debian/gpg -o /etc/apt/keyrings/docker.asc
+      sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+      # Add the repository to Apt sources:
+      echo \
+        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/debian \
+        $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+        sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+      ````
+- name: install docker and some management sugar
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-buildx-plugin
+      - docker-compose-plugin
+  notify: restart docker
+  tags: [docker]
+
+- name: configure docker daemon.json
+  # currently mostly required to enable the journald log-driver by default
+  ansible.builtin.template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+    group: root
+    mode: '0644'
+  notify: restart docker
+  tags: [docker]
+
+- name: ensure docker is started
+  # docker must be running for creating a network in the next step
+  ansible.builtin.systemd_service:
+    name: docker
+    state: started
+
+- name: ensure a named docker network exists
+  community.general.docker_network:
+    name: "{{docker_network_name}}"
+  become: true
+  notify: restart docker
+  tags: [docker]

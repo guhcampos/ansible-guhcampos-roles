@@ -1,0 +1,64 @@
+---
+- name: "create service group"
+  ansible.builtin.group:
+    name: "{{pihole_unix_group_name}}"
+    gid: "{{pihole_unix_group_id}}"
+    state: present
+  register: transmission_group_results
+
+- name: "create service home"
+  ansible.builtin.file:
+    state: directory
+    path: "{{pihole_home}}"
+    owner: root
+    group: adm
+    mode: 0755
+  notify: "restart docker-pihole"
+
+- name: "create user"
+  ansible.builtin.user:
+    name: "{{pihole_unix_user_name}}"
+    state: present
+    uid: "{{pihole_unix_user_id}}"
+    group:  "{{pihole_unix_group_name}}"
+    shell: /usr/sbin/nologin
+    home: "{{pihole_home}}"
+    create_home: false
+
+- name: template compose file
+  ansible.builtin.template:
+    src: "compose.yaml.j2"
+    dest: "{{pihole_home}}/compose.yaml"
+    owner: root
+    group: adm
+    mode: 0640
+  notify: "restart docker-pihole"
+  tags: [compose]
+
+- name: "create config dir"
+  ansible.builtin.file:
+    state: directory
+    path: "{{pihole_config_home}}"
+    owner: "{{pihole_unix_user_name}}"
+    group: "{{pihole_unix_group_name}}"
+    mode: "{{pihole_unix_mode_config_dir}}"
+  notify: "restart docker-pihole"
+
+- name: template systemd service
+  ansible.builtin.template:
+    src: "docker-pihole.service.j2"
+    dest: "/lib/systemd/system/docker-pihole.service"
+  notify: "restart docker-pihole"
+
+- name: enable and start docker-pihole
+  ansible.builtin.systemd_service:
+    name: docker-pihole
+    daemon_reload: true
+    enabled: true
+    masked: no
+    state: started
+  async: 60
+  poll: 5
+
+- ansible.builtin.include_tasks: "_nginx.yaml"
+  tags: [nginx]

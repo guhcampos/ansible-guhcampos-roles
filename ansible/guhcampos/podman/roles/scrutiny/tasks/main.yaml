@@ -25,15 +25,15 @@
     home: "{{scrutiny_home}}"
     create_home: false
 
-- name: template podman-compose
+- name: template compose file
   ansible.builtin.template:
-    src: "podman-compose.yaml.j2"
-    dest: "{{scrutiny_home}}/podman-compose.yaml"
+    src: "compose.yaml.j2"
+    dest: "{{scrutiny_home}}/compose.yaml"
     owner: root
     group: adm
     mode: 0640
   notify: "restart podman-scrutiny"
-  tags: [podman-compose]
+  tags: [compose]
 
 - name: "create config dir"
   ansible.builtin.file:

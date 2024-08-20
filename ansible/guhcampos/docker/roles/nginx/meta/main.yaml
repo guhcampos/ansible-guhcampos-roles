@@ -1,2 +1,4 @@
 ---
-dependencies: []
+dependencies:
+  - role: guhcampos.base.server_docker
+    tags: [nginx]

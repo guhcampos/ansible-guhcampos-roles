@@ -1,0 +1,6 @@
+---
+- name: restart podman-prefect
+  ansible.builtin.systemd_service:
+    name: "podman-prefect"
+    daemon_reload: true
+    state: restarted

@@ -9,5 +9,5 @@ WantedBy=multi-user.target
 [Service]
 RemainAfterExit=true
 WorkingDirectory={% raw %}{{{%endraw%}{{cookiecutter.service_name}}_home{% raw %}}}{%endraw+%}
-ExecStart=/usr/bin/{{cookiecutter.container_runtime}}-compose up -d --remove-orphans
-ExecStop=/usr/bin/{{cookiecutter.container_runtime}}-compose down
+ExecStart=/usr/bin/{{cookiecutter.container_runtime}} compose up --remove-orphans
+ExecStop=/usr/bin/{{cookiecutter.container_runtime}} compose down

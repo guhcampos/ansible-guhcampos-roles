@@ -1,0 +1,36 @@
+---
+prefect_config_home: "{{prefect_home}}/config"
+prefect_data_home: "{{prefect_home}}/data"
+prefect_container_command: "/usr/bin/tini -gs -- /opt/prefect/entrypoint.sh prefect server start"
+prefect_container_cpu_limit: "1"
+prefect_container_image: "{{prefect_container_repo}}:{{prefect_container_image_tag}}"
+prefect_container_mem_limit: "1g"
+prefect_container_network_name: "prefect"
+prefect_container_repo: "prefecthq/prefect"
+prefect_container_image_tag: "2-python3.12-kubernetes"
+prefect_home: "/opt/docker-prefect"
+prefect_nginx_http_port: 4200
+prefect_nginx_https_port: 0
+prefect_nginx_server_name: "prefect.*"
+
+prefect_timezone: "Etc/UTC"
+prefect_unix_group_id: "{{prefect_unix_user_id}}"
+prefect_unix_group_name: "{{prefect_unix_user_name}}"
+prefect_unix_user_id: 4200
+prefect_unix_user_name: "prefect"
+prefect_unix_umask: "002"
+prefect_unix_mode_config_dir: "0770"
+
+prefect_container_devices: []
+
+# extra container variables to set
+prefect_container_env: {}
+
+# network ports to expose
+prefect_container_ports:
+  - "{{prefect_nginx_http_port}}:{{prefect_nginx_http_port}}"
+
+# extra container volumes to mount
+prefect_container_volumes:
+ {}
+prefect_container_volumes_extra: {}

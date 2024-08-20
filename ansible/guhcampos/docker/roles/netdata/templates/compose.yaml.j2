@@ -1,0 +1,38 @@
+---
+services:
+  netdata:
+    container_name: "netdata"
+    image: "{{netdata_container_image}}"
+    restart: unless-stopped
+    devices: []
+    environment:
+      - PUID={{netdata_unix_user_id}}
+      - PGID={{netdata_unix_group_id}}
+      - UMASK={{netdata_unix_umask}}
+      - TZ={{netdata_timezone}}
+      {% for key,value in netdata_container_env.items() -%}
+      - {{key}}={{value}}
+      {% endfor %}
+
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      {% for volume in netdata_container_volumes -%}
+      {% if volume != "" -%}
+      - "{{volume}}"
+      {% endif %}
+      {%- endfor %}
+      {% for volume in netdata_container_volumes_extra -%}
+
+      {% if volume != "" -%}
+      - "{{volume.src}}:{{volume.dst}}"
+      {% endif -%}
+      {%- endfor %}
+
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+      - SYS_PTRACE
+
+
+    network_mode: "host"

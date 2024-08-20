@@ -1,0 +1,45 @@
+---
+services:
+  rclone:
+    container_name: "rclone"
+    image: "{{rclone_container_image}}"
+    restart: unless-stopped
+    command:
+      rcd --rc-web-gui --rc-web-gui-no-open-browser --rc-web-gui-update --rc-addr :3333 --log-level DEBUG --rc-pass=potato --rc-user=tomato
+    devices: []
+    environment:
+      - PUID={{rclone_unix_user_id}}
+      - PGID={{rclone_unix_group_id}}
+      - UMASK={{rclone_unix_umask}}
+      - TZ={{rclone_timezone}}
+      {% for key,value in rclone_container_env.items() -%}
+      - {{key}}={{value}}
+      {% endfor %}
+
+    ports:
+      {% for port in rclone_container_ports -%}
+      {% if port != "" -%}
+      - {{port}}
+      {% endif -%}
+      {%- endfor %}
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      {% for volume in rclone_container_volumes -%}
+      {% if volume != "" -%}
+      - "{{volume}}"
+      {% endif %}
+      {%- endfor %}
+      {% for volume in rclone_container_volumes_extra -%}
+
+      {% if volume != "" -%}
+      - "{{volume.src}}:{{volume.dst}}"
+      {% endif -%}
+      {%- endfor %}
+
+    cap_add: []
+
+networks:
+  default:
+    name: "{{rclone_container_network_name}}"
+    external: true

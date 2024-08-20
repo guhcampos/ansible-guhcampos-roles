@@ -22,5 +22,5 @@ context:
     _2:
         src: "{{ '{{qbittorrent_data_home}}' }}"
         dst: /data
-    unix_umask: "002"
-    unix_user_id: 6880
+  unix_umask: "002"
+  unix_user_id: 6880

@@ -1,0 +1,48 @@
+---
+services:
+  scrutiny:
+    container_name: "scrutiny"
+    image: "{{scrutiny_container_image}}"
+    restart: unless-stopped
+    devices: []
+    environment:
+      - PUID={{scrutiny_unix_user_id}}
+      - PGID={{scrutiny_unix_group_id}}
+      - UMASK={{scrutiny_unix_umask}}
+      - TZ={{scrutiny_timezone}}
+      {% for key,value in scrutiny_container_env.items() -%}
+      - {{key}}={{value}}
+      {% endfor %}
+
+    ports:
+      {% for port in scrutiny_container_ports -%}
+      {% if port != "" -%}
+      - {{port}}
+      {% endif -%}
+      {%- endfor %}
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      {% for volume in scrutiny_container_volumes -%}
+      {% if volume != "" -%}
+      - "{{volume}}"
+      {% endif %}
+      {%- endfor %}
+      {% for volume in scrutiny_container_volumes_extra -%}
+
+      {% if volume != "" -%}
+      - "{{volume.src}}:{{volume.dst}}"
+      {% endif -%}
+      {%- endfor %}
+
+    cap_add:
+      - SYS_RAWIO
+      - SYS_ADMIN
+
+
+
+
+networks:
+  default:
+    name: "{{scrutiny_container_network_name}}"
+    external: true

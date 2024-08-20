@@ -18,7 +18,7 @@ rclone_unix_group_id: "{{rclone_unix_user_id}}"
 rclone_unix_group_name: "{{rclone_unix_user_name}}"
 rclone_unix_user_id: <UID>
 rclone_unix_user_name: "rclone"
-rclone_unix_umask: "022"
+rclone_unix_umask: "002"
 rclone_unix_mode_config_dir: "0770"
 
 rclone_container_devices: []

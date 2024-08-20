@@ -17,7 +17,7 @@ scrutiny_unix_group_id: "{{scrutiny_unix_user_id}}"
 scrutiny_unix_group_name: "{{scrutiny_unix_user_name}}"
 scrutiny_unix_user_id: <UID>
 scrutiny_unix_user_name: "scrutiny"
-scrutiny_unix_umask: "022"
+scrutiny_unix_umask: "002"
 scrutiny_unix_mode_config_dir: "0770"
 
 scrutiny_container_devices: []

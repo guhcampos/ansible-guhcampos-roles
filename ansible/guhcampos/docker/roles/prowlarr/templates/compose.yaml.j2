@@ -1,0 +1,43 @@
+---
+services:
+  prowlarr:
+    container_name: "prowlarr"
+    image: "{{prowlarr_container_image}}"
+    restart: unless-stopped
+    devices: []
+    environment:
+      - PUID={{prowlarr_unix_user_id}}
+      - PGID={{prowlarr_unix_group_id}}
+      - UMASK={{prowlarr_unix_umask}}
+      - TZ={{prowlarr_timezone}}
+      {% for key,value in prowlarr_container_env.items() -%}
+      - {{key}}={{value}}
+      {% endfor %}
+
+    ports:
+      {% for port in prowlarr_container_ports -%}
+      {% if port != "" -%}
+      - {{port}}
+      {% endif -%}
+      {%- endfor %}
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      {% for volume in prowlarr_container_volumes -%}
+      {% if volume != "" -%}
+      - "{{volume}}"
+      {% endif %}
+      {%- endfor %}
+      {% for volume in prowlarr_container_volumes_extra -%}
+
+      {% if volume != "" -%}
+      - "{{volume.src}}:{{volume.dst}}"
+      {% endif -%}
+      {%- endfor %}
+
+    cap_add: []
+
+networks:
+  default:
+    name: "{{prowlarr_container_network_name}}"
+    external: true

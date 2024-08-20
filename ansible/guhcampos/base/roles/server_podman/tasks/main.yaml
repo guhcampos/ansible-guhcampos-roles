@@ -1,0 +1,27 @@
+- name: install podman and some management sugar
+  apt:
+    name:
+      - cockpit
+      - cockpit-podman
+      - podman
+      - podman-compose
+      - podman-docker
+  notify: restart cockpit
+  tags: [podman]
+
+- name: ensure a named podman network exists
+  containers.podman.podman_network:
+    name: "{{podman_network_name}}"
+  become: true
+  notify: restart cockpit
+  tags: [podman]
+
+- name: template the registries.conf to enable docker hub and private registries
+  # podman on debian an some other strict distributions will not come with docker-hub
+  # enabled, this ensures it's available by default - one could argue this is not
+  # best-practice, but complying at this time breaks too many docker-based workflows
+  ansible.builtin.template:
+    src: registries.conf.j2
+    dest: /etc/containers/registries.conf
+    group: root
+    mode: '0644'

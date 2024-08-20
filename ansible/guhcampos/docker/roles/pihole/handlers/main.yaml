@@ -1,0 +1,6 @@
+---
+- name: restart docker-pihole
+  ansible.builtin.systemd_service:
+    name: "docker-pihole"
+    daemon_reload: true
+    state: restarted

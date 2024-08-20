@@ -1,0 +1,45 @@
+---
+services:
+  archivebox:
+    container_name: "archivebox"
+    image: "{{archivebox_container_image}}"
+    restart: unless-stopped
+    command:
+      server --quick-init 0.0.0.0:{{archivebox_http_port}}
+    devices: []
+    environment:
+      - PUID={{archivebox_unix_user_id}}
+      - PGID={{archivebox_unix_group_id}}
+      - UMASK={{archivebox_unix_umask}}
+      - TZ={{archivebox_timezone}}
+      {% for key,value in archivebox_container_env.items() -%}
+      - {{key}}={{value}}
+      {% endfor %}
+
+    ports:
+      {% for port in archivebox_container_ports -%}
+      {% if port != "" -%}
+      - {{port}}
+      {% endif -%}
+      {%- endfor %}
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      {% for volume in archivebox_container_volumes -%}
+      {% if volume != "" -%}
+      - "{{volume}}"
+      {% endif %}
+      {%- endfor %}
+      {% for volume in archivebox_container_volumes_extra -%}
+
+      {% if volume != "" -%}
+      - "{{volume.src}}:{{volume.dst}}"
+      {% endif -%}
+      {%- endfor %}
+
+    cap_add: []
+
+networks:
+  default:
+    name: "{{archivebox_container_network_name}}"
+    external: true

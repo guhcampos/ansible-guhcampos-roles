@@ -1,0 +1,84 @@
+{%- macro var(name) -%}
+{{ '{{' }}{{ name }}{{ '}}' }}
+{%- endmacro -%}
+
+---
+services:
+  {{cookiecutter.service_name}}:
+    container_name: "{{cookiecutter.service_name}}"
+    image: "{{ var(cookiecutter.service_name+"_container_image") }}"
+    restart: unless-stopped
+    {% if cookiecutter.container_command != "" %}
+    command:
+      {{cookiecutter.container_command}}
+    {% endif %}
+    devices:
+      {%- if cookiecutter.container_devices._1 != "" %}
+      {%+raw%}{% for dev in {%endraw%}{{cookiecutter.service_name}}_container_devices{%raw%} -%}{%endraw%}
+      {%raw%}
+      {% if dev != "" -%}
+      - "{{dev.src}}:{{dev.dst}}"
+      {% endif -%}
+      {%- endfor %}
+      {%endraw%}
+      {% else %} []{# the space before [] is important #}
+      {% endif %}
+
+    environment:
+      - PUID={{ var(cookiecutter.service_name+"_unix_user_id") }}
+      - PGID={{ var(cookiecutter.service_name+"_unix_group_id") }}
+      - UMASK={{ var(cookiecutter.service_name+"_unix_umask") }}
+      - TZ={{ var(cookiecutter.service_name+"_timezone") }}
+      {%+raw%}{% for key,value in {%endraw%}{{cookiecutter.service_name}}_container_env.items(){%raw%} -%}{%endraw%}
+      {%raw%}
+      - {{key}}={{value}}
+      {% endfor %}
+      {%endraw%}
+
+    {% if cookiecutter.container_network_name != "host" %}
+    ports:
+      {%+raw%}{% for port in {%endraw%}{{cookiecutter.service_name}}_container_ports{%raw%} -%}{%endraw%}
+      {%raw%}
+      {% if port != "" -%}
+      - {{port}}
+      {% endif -%}
+      {%- endfor %}
+      {%endraw%}
+    {% endif %}
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      {%+raw%}{% for volume in {%endraw%}{{cookiecutter.service_name}}_container_volumes{%raw%} -%}{%endraw%}
+      {%raw%}
+      {% if volume != "" -%}
+      - "{{volume}}"
+      {% endif %}
+      {%- endfor %}
+      {%endraw%}
+      {%+raw%}{% for volume in {%endraw%}{{cookiecutter.service_name}}_container_volumes_extra{%raw%} -%}{%endraw+%}
+      {%raw%}
+      {% if volume != "" -%}
+      - "{{volume.src}}:{{volume.dst}}"
+      {% endif -%}
+      {%- endfor %}
+      {%endraw%}
+
+    cap_add:
+      {%- if cookiecutter.container_capabilities._1 != "" %}
+      {% for _,cap in cookiecutter.container_capabilities.items() +%}
+      {% if cap != "" %}
+      - {{cap}}
+      {%- endif -%}
+      {%- endfor %}
+      {% else %} []{# the space before [] is important #}
+      {% endif %}
+
+{% if cookiecutter.container_network_name == "host" %}
+    network_mode: "host"
+{% else %}
+
+networks:
+  default:
+    name: "{{ var(cookiecutter.service_name+"_container_network_name") }}"
+    external: true
+{% endif %}

@@ -1,0 +1,43 @@
+---
+services:
+  sonarr:
+    container_name: "sonarr"
+    image: "{{sonarr_container_image}}"
+    restart: unless-stopped
+    devices: []
+    environment:
+      - PUID={{sonarr_unix_user_id}}
+      - PGID={{sonarr_unix_group_id}}
+      - UMASK={{sonarr_unix_umask}}
+      - TZ={{sonarr_timezone}}
+      {% for key,value in sonarr_container_env.items() -%}
+      - {{key}}={{value}}
+      {% endfor %}
+
+    ports:
+      {% for port in sonarr_container_ports -%}
+      {% if port != "" -%}
+      - {{port}}
+      {% endif -%}
+      {%- endfor %}
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      {% for volume in sonarr_container_volumes -%}
+      {% if volume != "" -%}
+      - "{{volume}}"
+      {% endif %}
+      {%- endfor %}
+      {% for volume in sonarr_container_volumes_extra -%}
+
+      {% if volume != "" -%}
+      - "{{volume.src}}:{{volume.dst}}"
+      {% endif -%}
+      {%- endfor %}
+
+    cap_add: []
+
+networks:
+  default:
+    name: "{{sonarr_container_network_name}}"
+    external: true

@@ -1,8 +1,8 @@
 ---
-{% if cookiecutter.nginx_enabled %}
 dependencies:
+  - role: guhcampos.base.server_{{cookiecutter.container_runtime}}
+    tags: [nginx]
+{% if cookiecutter.nginx_enabled %}
   - role: guhcampos.{{cookiecutter.container_runtime}}.nginx
     tags: [nginx]
-{% else -%}
-dependencies: []
 {%- endif %}

@@ -1,0 +1,30 @@
+---
+
+name: prefect
+public: true
+template: cookiecutter-ansible-role-container-service
+context:
+  data_enabled: true
+  # container_command: tomato
+  container_command: >
+    /usr/bin/tini
+    -gs
+    --
+    /opt/prefect/entrypoint.sh
+    prefect
+    server
+    start
+#   - --port
+#   - {{ .Values.service.targetPort | quote }}
+#   {{- range .Values.server.extraArgs }}
+#   - {{ . | toString }}
+#   {{- end }}
+
+  container_repo: prefecthq/prefect
+  container_image_tag: 2-python3.12-kubernetes
+  http_port: 4200
+  nginx_enabled: true
+  nginx_proxy_type: subdomain
+  nginx_ssl_enabled: true
+  unix_umask: "002"
+  unix_user_id: 4200

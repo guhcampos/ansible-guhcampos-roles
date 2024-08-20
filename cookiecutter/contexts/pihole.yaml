@@ -1,0 +1,28 @@
+---
+
+name: pihole
+public: true
+template: cookiecutter-ansible-role-container-service
+context:
+  data_enabled: true
+  container_repo: pihole/pihole
+  container_image_tag: latest
+  http_port: 5353
+  nginx_enabled: true
+  nginx_proxy_type: subdomain
+  nginx_ssl_enabled: true
+  container_volumes:
+    _1:
+      src: "{{ '{{pihole_config_home}}' }}"
+      dst: /config
+    _2:
+      src: "{{ '{{pihole_dnsmasq_home}}' }}"
+      dst: /data
+  container_ports:
+    _1: "53:53"
+    _2: "67:67"
+    _3: "5353:80"
+  container_capabilities:
+    _1: NET_ADMIN
+  unix_umask: "002"
+  unix_user_id: 5353

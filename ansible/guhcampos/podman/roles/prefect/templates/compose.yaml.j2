@@ -1,0 +1,45 @@
+---
+services:
+  prefect:
+    container_name: "prefect"
+    image: "{{prefect_container_image}}"
+    restart: unless-stopped
+    command:
+      /usr/bin/tini -gs -- /opt/prefect/entrypoint.sh prefect server start
+    devices: []
+    environment:
+      - PUID={{prefect_unix_user_id}}
+      - PGID={{prefect_unix_group_id}}
+      - UMASK={{prefect_unix_umask}}
+      - TZ={{prefect_timezone}}
+      {% for key,value in prefect_container_env.items() -%}
+      - {{key}}={{value}}
+      {% endfor %}
+
+    ports:
+      {% for port in prefect_container_ports -%}
+      {% if port != "" -%}
+      - {{port}}
+      {% endif -%}
+      {%- endfor %}
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      {% for volume in prefect_container_volumes -%}
+      {% if volume != "" -%}
+      - "{{volume}}"
+      {% endif %}
+      {%- endfor %}
+      {% for volume in prefect_container_volumes_extra -%}
+
+      {% if volume != "" -%}
+      - "{{volume.src}}:{{volume.dst}}"
+      {% endif -%}
+      {%- endfor %}
+
+    cap_add: []
+
+networks:
+  default:
+    name: "{{prefect_container_network_name}}"
+    external: true

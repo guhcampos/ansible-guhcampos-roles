@@ -1,0 +1,6 @@
+---
+- name: restart podman-pihole
+  ansible.builtin.systemd_service:
+    name: "podman-pihole"
+    daemon_reload: true
+    state: restarted

@@ -1,0 +1,43 @@
+---
+services:
+  portainer:
+    container_name: "portainer"
+    image: "{{portainer_container_image}}"
+    restart: unless-stopped
+    devices: []
+    environment:
+      - PUID={{portainer_unix_user_id}}
+      - PGID={{portainer_unix_group_id}}
+      - UMASK={{portainer_unix_umask}}
+      - TZ={{portainer_timezone}}
+      {% for key,value in portainer_container_env.items() -%}
+      - {{key}}={{value}}
+      {% endfor %}
+
+    ports:
+      {% for port in portainer_container_ports -%}
+      {% if port != "" -%}
+      - {{port}}
+      {% endif -%}
+      {%- endfor %}
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      {% for volume in portainer_container_volumes -%}
+      {% if volume != "" -%}
+      - "{{volume}}"
+      {% endif %}
+      {%- endfor %}
+      {% for volume in portainer_container_volumes_extra -%}
+
+      {% if volume != "" -%}
+      - "{{volume.src}}:{{volume.dst}}"
+      {% endif -%}
+      {%- endfor %}
+
+    cap_add: []
+
+networks:
+  default:
+    name: "{{portainer_container_network_name}}"
+    external: true

@@ -1,0 +1,48 @@
+---
+services:
+  pihole:
+    container_name: "pihole"
+    image: "{{pihole_container_image}}"
+    restart: unless-stopped
+    devices: []
+    environment:
+      - PUID={{pihole_unix_user_id}}
+      - PGID={{pihole_unix_group_id}}
+      - UMASK={{pihole_unix_umask}}
+      - TZ={{pihole_timezone}}
+      {% for key,value in pihole_container_env.items() -%}
+      - {{key}}={{value}}
+      {% endfor %}
+
+    ports:
+      {% for port in pihole_container_ports -%}
+      {% if port != "" -%}
+      - {{port}}
+      {% endif -%}
+      {%- endfor %}
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      {% for volume in pihole_container_volumes -%}
+      {% if volume != "" -%}
+      - "{{volume}}"
+      {% endif %}
+      {%- endfor %}
+      {% for volume in pihole_container_volumes_extra -%}
+
+      {% if volume != "" -%}
+      - "{{volume.src}}:{{volume.dst}}"
+      {% endif -%}
+      {%- endfor %}
+
+    cap_add:
+      - NET_ADMIN
+
+
+
+
+
+networks:
+  default:
+    name: "{{pihole_container_network_name}}"
+    external: true

@@ -1,0 +1,43 @@
+---
+services:
+  heimdall:
+    container_name: "heimdall"
+    image: "{{heimdall_container_image}}"
+    restart: unless-stopped
+    devices: []
+    environment:
+      - PUID={{heimdall_unix_user_id}}
+      - PGID={{heimdall_unix_group_id}}
+      - UMASK={{heimdall_unix_umask}}
+      - TZ={{heimdall_timezone}}
+      {% for key,value in heimdall_container_env.items() -%}
+      - {{key}}={{value}}
+      {% endfor %}
+
+    ports:
+      {% for port in heimdall_container_ports -%}
+      {% if port != "" -%}
+      - {{port}}
+      {% endif -%}
+      {%- endfor %}
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      {% for volume in heimdall_container_volumes -%}
+      {% if volume != "" -%}
+      - "{{volume}}"
+      {% endif %}
+      {%- endfor %}
+      {% for volume in heimdall_container_volumes_extra -%}
+
+      {% if volume != "" -%}
+      - "{{volume.src}}:{{volume.dst}}"
+      {% endif -%}
+      {%- endfor %}
+
+    cap_add: []
+
+networks:
+  default:
+    name: "{{heimdall_container_network_name}}"
+    external: true

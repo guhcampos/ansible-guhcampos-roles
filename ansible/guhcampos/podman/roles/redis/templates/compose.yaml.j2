@@ -1,0 +1,43 @@
+---
+services:
+  redis:
+    container_name: "redis"
+    image: "{{redis_container_image}}"
+    restart: unless-stopped
+    devices: []
+    environment:
+      - PUID={{redis_unix_user_id}}
+      - PGID={{redis_unix_group_id}}
+      - UMASK={{redis_unix_umask}}
+      - TZ={{redis_timezone}}
+      {% for key,value in redis_container_env.items() -%}
+      - {{key}}={{value}}
+      {% endfor %}
+
+    ports:
+      {% for port in redis_container_ports -%}
+      {% if port != "" -%}
+      - {{port}}
+      {% endif -%}
+      {%- endfor %}
+
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      {% for volume in redis_container_volumes -%}
+      {% if volume != "" -%}
+      - "{{volume}}"
+      {% endif %}
+      {%- endfor %}
+      {% for volume in redis_container_volumes_extra -%}
+
+      {% if volume != "" -%}
+      - "{{volume.src}}:{{volume.dst}}"
+      {% endif -%}
+      {%- endfor %}
+
+    cap_add: []
+
+networks:
+  default:
+    name: "{{redis_container_network_name}}"
+    external: true

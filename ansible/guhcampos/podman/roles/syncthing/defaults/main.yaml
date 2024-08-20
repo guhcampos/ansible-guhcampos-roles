@@ -17,7 +17,7 @@ syncthing_unix_group_id: "{{syncthing_unix_user_id}}"
 syncthing_unix_group_name: "{{syncthing_unix_user_name}}"
 syncthing_unix_user_id: <UID>
 syncthing_unix_user_name: "syncthing"
-syncthing_unix_umask: "022"
+syncthing_unix_umask: "002"
 syncthing_unix_mode_config_dir: "0770"
 
 syncthing_container_devices: []
